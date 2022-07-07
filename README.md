@@ -1,2 +1,2 @@
 # joplin_database
-Replication of Joplin database, in sqlite
+Replication of Joplin database, with SQLite and Flutter
