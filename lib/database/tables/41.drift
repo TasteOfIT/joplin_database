@@ -50,7 +50,7 @@ CREATE INDEX note_tags_updated_time ON note_tags (updated_time);
 
 CREATE TABLE table_fields (
     id INTEGER PRIMARY KEY,
-    table_name TEXT NOT NULL,
+    the_table_name TEXT NOT NULL, -- name conflicts, was table_name
     field_name TEXT NOT NULL,
     field_type INT NOT NULL,
     field_default TEXT
@@ -100,7 +100,6 @@ CREATE TABLE alarms (
     trigger_time INT NOT NULL
 );
 
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE INDEX alarm_note_id ON alarms (note_id);
 
 CREATE TABLE master_keys (
@@ -272,28 +271,18 @@ CREATE INDEX notes_normalized_source_url ON notes_normalized (source_url);
 
 CREATE VIRTUAL TABLE notes_fts USING fts5(
     content="notes_normalized",
-    notindexed="id",
-    notindexed="user_created_time",
-    notindexed="user_updated_time",
-    notindexed="is_todo",
-    notindexed="todo_completed",
-    notindexed="parent_id",
-    notindexed="latitude",
-    notindexed="longitude",
-    notindexed="altitude",
-    notindexed="source_url",
-    id,
+    id UNINDEXED,
     title,
     body,
-    user_created_time,
-    user_updated_time,
-    is_todo,
-    todo_completed,
-    parent_id,
-    latitude,
-    longitude,
-    altitude,
-    source_url
+    user_created_time UNINDEXED,
+    user_updated_time UNINDEXED,
+    is_todo UNINDEXED,
+    todo_completed UNINDEXED,
+    parent_id UNINDEXED,
+    latitude UNINDEXED,
+    longitude UNINDEXED,
+    altitude UNINDEXED,
+    source_url UNINDEXED
 )
 --/* notes_fts(id,title,body,user_created_time,user_updated_time,is_todo,todo_completed,parent_id,latitude,longitude,altitude,source_url) */
 ;

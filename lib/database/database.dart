@@ -1,18 +1,29 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'dao/daos.dart';
 
 part 'database.g.dart';
 
 @DriftDatabase(
-  include: {'queries/queries.drift'},
+  include: {'tables/tables.drift'},
+  daos: [FolderDao],
 )
 class JoplinDatabase extends _$JoplinDatabase {
-  JoplinDatabase() : super(NativeDatabase.memory());
+  JoplinDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 41;
+}
 
-  Future<List<Folder>> getFolders() {
-    return allFolders().get();
-  }
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(join(dbFolder.path, 'joplin.sqlite'));
+    return NativeDatabase(file);
+  });
 }

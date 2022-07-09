@@ -1,7 +1,5 @@
 library joplin_database;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'database/dao/daos.dart';
+export 'database/database.dart';
+export 'di/database_module.dart';

@@ -6550,7 +6550,7 @@ class NotesFts extends Table
   bool get dontWriteConstraints => true;
   @override
   String get moduleAndArgs =>
-      'fts5(content="notes_normalized", notindexed="id", notindexed="user_created_time", notindexed="user_updated_time", notindexed="is_todo", notindexed="todo_completed", notindexed="parent_id", notindexed="latitude", notindexed="longitude", notindexed="altitude", notindexed="source_url", id, title, body, user_created_time, user_updated_time, is_todo, todo_completed, parent_id, latitude, longitude, altitude, source_url)';
+      'fts5(content="notes_normalized", id UNINDEXED, title, body, user_created_time UNINDEXED, user_updated_time UNINDEXED, is_todo UNINDEXED, todo_completed UNINDEXED, parent_id UNINDEXED, latitude UNINDEXED, longitude UNINDEXED, altitude UNINDEXED, source_url UNINDEXED)';
 }
 
 class Note extends DataClass implements Insertable<Note> {
@@ -7727,13 +7727,13 @@ class Notes extends Table with TableInfo<Notes, Note> {
 
 class TableField extends DataClass implements Insertable<TableField> {
   final int id;
-  final String tableName;
+  final String theTableName;
   final String fieldName;
   final int fieldType;
   final String? fieldDefault;
   TableField(
       {required this.id,
-      required this.tableName,
+      required this.theTableName,
       required this.fieldName,
       required this.fieldType,
       this.fieldDefault});
@@ -7742,8 +7742,8 @@ class TableField extends DataClass implements Insertable<TableField> {
     return TableField(
       id: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      tableName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}table_name'])!,
+      theTableName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}the_table_name'])!,
       fieldName: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}field_name'])!,
       fieldType: const IntType()
@@ -7756,7 +7756,7 @@ class TableField extends DataClass implements Insertable<TableField> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['table_name'] = Variable<String>(tableName);
+    map['the_table_name'] = Variable<String>(theTableName);
     map['field_name'] = Variable<String>(fieldName);
     map['field_type'] = Variable<int>(fieldType);
     if (!nullToAbsent || fieldDefault != null) {
@@ -7768,7 +7768,7 @@ class TableField extends DataClass implements Insertable<TableField> {
   TableFieldsCompanion toCompanion(bool nullToAbsent) {
     return TableFieldsCompanion(
       id: Value(id),
-      tableName: Value(tableName),
+      theTableName: Value(theTableName),
       fieldName: Value(fieldName),
       fieldType: Value(fieldType),
       fieldDefault: fieldDefault == null && nullToAbsent
@@ -7782,7 +7782,7 @@ class TableField extends DataClass implements Insertable<TableField> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return TableField(
       id: serializer.fromJson<int>(json['id']),
-      tableName: serializer.fromJson<String>(json['table_name']),
+      theTableName: serializer.fromJson<String>(json['the_table_name']),
       fieldName: serializer.fromJson<String>(json['field_name']),
       fieldType: serializer.fromJson<int>(json['field_type']),
       fieldDefault: serializer.fromJson<String?>(json['field_default']),
@@ -7793,7 +7793,7 @@ class TableField extends DataClass implements Insertable<TableField> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'table_name': serializer.toJson<String>(tableName),
+      'the_table_name': serializer.toJson<String>(theTableName),
       'field_name': serializer.toJson<String>(fieldName),
       'field_type': serializer.toJson<int>(fieldType),
       'field_default': serializer.toJson<String?>(fieldDefault),
@@ -7802,13 +7802,13 @@ class TableField extends DataClass implements Insertable<TableField> {
 
   TableField copyWith(
           {int? id,
-          String? tableName,
+          String? theTableName,
           String? fieldName,
           int? fieldType,
           String? fieldDefault}) =>
       TableField(
         id: id ?? this.id,
-        tableName: tableName ?? this.tableName,
+        theTableName: theTableName ?? this.theTableName,
         fieldName: fieldName ?? this.fieldName,
         fieldType: fieldType ?? this.fieldType,
         fieldDefault: fieldDefault ?? this.fieldDefault,
@@ -7817,7 +7817,7 @@ class TableField extends DataClass implements Insertable<TableField> {
   String toString() {
     return (StringBuffer('TableField(')
           ..write('id: $id, ')
-          ..write('tableName: $tableName, ')
+          ..write('theTableName: $theTableName, ')
           ..write('fieldName: $fieldName, ')
           ..write('fieldType: $fieldType, ')
           ..write('fieldDefault: $fieldDefault')
@@ -7827,13 +7827,13 @@ class TableField extends DataClass implements Insertable<TableField> {
 
   @override
   int get hashCode =>
-      Object.hash(id, tableName, fieldName, fieldType, fieldDefault);
+      Object.hash(id, theTableName, fieldName, fieldType, fieldDefault);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is TableField &&
           other.id == this.id &&
-          other.tableName == this.tableName &&
+          other.theTableName == this.theTableName &&
           other.fieldName == this.fieldName &&
           other.fieldType == this.fieldType &&
           other.fieldDefault == this.fieldDefault);
@@ -7841,36 +7841,36 @@ class TableField extends DataClass implements Insertable<TableField> {
 
 class TableFieldsCompanion extends UpdateCompanion<TableField> {
   final Value<int> id;
-  final Value<String> tableName;
+  final Value<String> theTableName;
   final Value<String> fieldName;
   final Value<int> fieldType;
   final Value<String?> fieldDefault;
   const TableFieldsCompanion({
     this.id = const Value.absent(),
-    this.tableName = const Value.absent(),
+    this.theTableName = const Value.absent(),
     this.fieldName = const Value.absent(),
     this.fieldType = const Value.absent(),
     this.fieldDefault = const Value.absent(),
   });
   TableFieldsCompanion.insert({
     this.id = const Value.absent(),
-    required String tableName,
+    required String theTableName,
     required String fieldName,
     required int fieldType,
     this.fieldDefault = const Value.absent(),
-  })  : tableName = Value(tableName),
+  })  : theTableName = Value(theTableName),
         fieldName = Value(fieldName),
         fieldType = Value(fieldType);
   static Insertable<TableField> custom({
     Expression<int>? id,
-    Expression<String>? tableName,
+    Expression<String>? theTableName,
     Expression<String>? fieldName,
     Expression<int>? fieldType,
     Expression<String?>? fieldDefault,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (tableName != null) 'table_name': tableName,
+      if (theTableName != null) 'the_table_name': theTableName,
       if (fieldName != null) 'field_name': fieldName,
       if (fieldType != null) 'field_type': fieldType,
       if (fieldDefault != null) 'field_default': fieldDefault,
@@ -7879,13 +7879,13 @@ class TableFieldsCompanion extends UpdateCompanion<TableField> {
 
   TableFieldsCompanion copyWith(
       {Value<int>? id,
-      Value<String>? tableName,
+      Value<String>? theTableName,
       Value<String>? fieldName,
       Value<int>? fieldType,
       Value<String?>? fieldDefault}) {
     return TableFieldsCompanion(
       id: id ?? this.id,
-      tableName: tableName ?? this.tableName,
+      theTableName: theTableName ?? this.theTableName,
       fieldName: fieldName ?? this.fieldName,
       fieldType: fieldType ?? this.fieldType,
       fieldDefault: fieldDefault ?? this.fieldDefault,
@@ -7898,8 +7898,8 @@ class TableFieldsCompanion extends UpdateCompanion<TableField> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (tableName.present) {
-      map['table_name'] = Variable<String>(tableName.value);
+    if (theTableName.present) {
+      map['the_table_name'] = Variable<String>(theTableName.value);
     }
     if (fieldName.present) {
       map['field_name'] = Variable<String>(fieldName.value);
@@ -7917,7 +7917,7 @@ class TableFieldsCompanion extends UpdateCompanion<TableField> {
   String toString() {
     return (StringBuffer('TableFieldsCompanion(')
           ..write('id: $id, ')
-          ..write('tableName: $tableName, ')
+          ..write('theTableName: $theTableName, ')
           ..write('fieldName: $fieldName, ')
           ..write('fieldType: $fieldType, ')
           ..write('fieldDefault: $fieldDefault')
@@ -7937,9 +7937,10 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
       type: const IntType(),
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
-  final VerificationMeta _tableNameMeta = const VerificationMeta('tableName');
-  late final GeneratedColumn<String?> tableName = GeneratedColumn<String?>(
-      'table_name', aliasedName, false,
+  final VerificationMeta _theTableNameMeta =
+      const VerificationMeta('theTableName');
+  late final GeneratedColumn<String?> theTableName = GeneratedColumn<String?>(
+      'the_table_name', aliasedName, false,
       type: const StringType(),
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
@@ -7964,7 +7965,7 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
       $customConstraints: '');
   @override
   List<GeneratedColumn> get $columns =>
-      [id, tableName, fieldName, fieldType, fieldDefault];
+      [id, theTableName, fieldName, fieldType, fieldDefault];
   @override
   String get aliasedName => _alias ?? 'table_fields';
   @override
@@ -7977,11 +7978,13 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('table_name')) {
-      context.handle(_tableNameMeta,
-          tableName.isAcceptableOrUnknown(data['table_name']!, _tableNameMeta));
+    if (data.containsKey('the_table_name')) {
+      context.handle(
+          _theTableNameMeta,
+          theTableName.isAcceptableOrUnknown(
+              data['the_table_name']!, _theTableNameMeta));
     } else if (isInserting) {
-      context.missing(_tableNameMeta);
+      context.missing(_theTableNameMeta);
     }
     if (data.containsKey('field_name')) {
       context.handle(_fieldNameMeta,
@@ -8375,189 +8378,6 @@ class Settings extends Table with TableInfo<Settings, Setting> {
   @override
   Settings createAlias(String alias) {
     return Settings(attachedDatabase, alias);
-  }
-
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class SqliteSequenceData extends DataClass
-    implements Insertable<SqliteSequenceData> {
-  final Uint8List? name;
-  final Uint8List? seq;
-  SqliteSequenceData({this.name, this.seq});
-  factory SqliteSequenceData.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return SqliteSequenceData(
-      name: const BlobType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      seq: const BlobType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}seq']),
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<Uint8List?>(name);
-    }
-    if (!nullToAbsent || seq != null) {
-      map['seq'] = Variable<Uint8List?>(seq);
-    }
-    return map;
-  }
-
-  SqliteSequenceCompanion toCompanion(bool nullToAbsent) {
-    return SqliteSequenceCompanion(
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      seq: seq == null && nullToAbsent ? const Value.absent() : Value(seq),
-    );
-  }
-
-  factory SqliteSequenceData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SqliteSequenceData(
-      name: serializer.fromJson<Uint8List?>(json['name']),
-      seq: serializer.fromJson<Uint8List?>(json['seq']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'name': serializer.toJson<Uint8List?>(name),
-      'seq': serializer.toJson<Uint8List?>(seq),
-    };
-  }
-
-  SqliteSequenceData copyWith({Uint8List? name, Uint8List? seq}) =>
-      SqliteSequenceData(
-        name: name ?? this.name,
-        seq: seq ?? this.seq,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('SqliteSequenceData(')
-          ..write('name: $name, ')
-          ..write('seq: $seq')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(name, seq);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SqliteSequenceData &&
-          other.name == this.name &&
-          other.seq == this.seq);
-}
-
-class SqliteSequenceCompanion extends UpdateCompanion<SqliteSequenceData> {
-  final Value<Uint8List?> name;
-  final Value<Uint8List?> seq;
-  const SqliteSequenceCompanion({
-    this.name = const Value.absent(),
-    this.seq = const Value.absent(),
-  });
-  SqliteSequenceCompanion.insert({
-    this.name = const Value.absent(),
-    this.seq = const Value.absent(),
-  });
-  static Insertable<SqliteSequenceData> custom({
-    Expression<Uint8List?>? name,
-    Expression<Uint8List?>? seq,
-  }) {
-    return RawValuesInsertable({
-      if (name != null) 'name': name,
-      if (seq != null) 'seq': seq,
-    });
-  }
-
-  SqliteSequenceCompanion copyWith(
-      {Value<Uint8List?>? name, Value<Uint8List?>? seq}) {
-    return SqliteSequenceCompanion(
-      name: name ?? this.name,
-      seq: seq ?? this.seq,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (name.present) {
-      map['name'] = Variable<Uint8List?>(name.value);
-    }
-    if (seq.present) {
-      map['seq'] = Variable<Uint8List?>(seq.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SqliteSequenceCompanion(')
-          ..write('name: $name, ')
-          ..write('seq: $seq')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class SqliteSequence extends Table
-    with TableInfo<SqliteSequence, SqliteSequenceData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  SqliteSequence(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  late final GeneratedColumn<Uint8List?> name = GeneratedColumn<Uint8List?>(
-      'name', aliasedName, true,
-      type: const BlobType(),
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _seqMeta = const VerificationMeta('seq');
-  late final GeneratedColumn<Uint8List?> seq = GeneratedColumn<Uint8List?>(
-      'seq', aliasedName, true,
-      type: const BlobType(),
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  @override
-  List<GeneratedColumn> get $columns => [name, seq];
-  @override
-  String get aliasedName => _alias ?? 'sqlite_sequence';
-  @override
-  String get actualTableName => 'sqlite_sequence';
-  @override
-  VerificationContext validateIntegrity(Insertable<SqliteSequenceData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    }
-    if (data.containsKey('seq')) {
-      context.handle(
-          _seqMeta, seq.isAcceptableOrUnknown(data['seq']!, _seqMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-  @override
-  SqliteSequenceData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return SqliteSequenceData.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  SqliteSequence createAlias(String alias) {
-    return SqliteSequence(attachedDatabase, alias);
   }
 
   @override
@@ -9502,15 +9322,9 @@ abstract class _$JoplinDatabase extends GeneratedDatabase {
   late final TableFields tableFields = TableFields(this);
   late final Version version = Version(this);
   late final Settings settings = Settings(this);
-  late final SqliteSequence sqliteSequence = SqliteSequence(this);
   late final MasterKeys masterKeys = MasterKeys(this);
   late final Migrations migrations = Migrations(this);
-  Selectable<Folder> allFolders() {
-    return customSelect('SELECT * FROM folders', variables: [], readsFrom: {
-      folders,
-    }).map(folders.mapFromRow);
-  }
-
+  late final FolderDao folderDao = FolderDao(this as JoplinDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -9585,7 +9399,6 @@ abstract class _$JoplinDatabase extends GeneratedDatabase {
         tableFields,
         version,
         settings,
-        sqliteSequence,
         masterKeys,
         migrations
       ];
