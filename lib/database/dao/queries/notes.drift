@@ -1,0 +1,3 @@
+import '../../tables/tables.drift';
+
+allNotes: SELECT * FROM notes;

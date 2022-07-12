@@ -8,7 +8,11 @@ part 'folder_dao.g.dart';
 class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
   FolderDao(JoplinDatabase db) : super(db);
 
-  Future<List<Folder>> getFolders() {
-    return allFolders().get();
+  Stream<List<Folder>> getFolders() {
+    return allFolders().watch();
+  }
+
+  Future<int> createFolder(Folder folder) {
+    return addFolder(folder);
   }
 }

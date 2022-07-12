@@ -1,3 +1,4 @@
 import '../../tables/tables.drift';
 
 allFolders: SELECT * FROM folders;
+addFolder: INSERT INTO folders $folder;

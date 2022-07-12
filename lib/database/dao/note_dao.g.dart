@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'folder_dao.dart';
+part of 'note_dao.dart';
 
 // **************************************************************************
 // DaoGenerator
 // **************************************************************************
 
-mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
+mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
   Folders get folders => attachedDatabase.folders;
   Tags get tags => attachedDatabase.tags;
   NoteTags get noteTags => attachedDatabase.noteTags;
@@ -31,18 +31,9 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
   Settings get settings => attachedDatabase.settings;
   MasterKeys get masterKeys => attachedDatabase.masterKeys;
   Migrations get migrations => attachedDatabase.migrations;
-  Selectable<Folder> allFolders() {
-    return customSelect('SELECT * FROM folders', variables: [], readsFrom: {
-      folders,
-    }).map(folders.mapFromRow);
-  }
-
-  Future<int> addFolder(Insertable<Folder> folder) {
-    final generatedfolder = $writeInsertable(this.folders, folder);
-    return customInsert(
-      'INSERT INTO folders ${generatedfolder.sql}',
-      variables: [...generatedfolder.introducedVariables],
-      updates: {folders},
-    );
+  Selectable<Note> allNotes() {
+    return customSelect('SELECT * FROM notes', variables: [], readsFrom: {
+      notes,
+    }).map(notes.mapFromRow);
   }
 }

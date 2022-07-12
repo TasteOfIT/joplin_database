@@ -9325,6 +9325,7 @@ abstract class _$JoplinDatabase extends GeneratedDatabase {
   late final MasterKeys masterKeys = MasterKeys(this);
   late final Migrations migrations = Migrations(this);
   late final FolderDao folderDao = FolderDao(this as JoplinDatabase);
+  late final NoteDao noteDao = NoteDao(this as JoplinDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
