@@ -12,7 +12,11 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
     return allFolders().watch();
   }
 
-  Future<int> createFolder(Folder folder) {
-    return addFolder(folder);
+  Future<int> addFolder(Folder folder) {
+    return insertFolder(folder);
+  }
+
+  Future<int> removeFolder(String id) {
+    return deleteFolder(id);
   }
 }

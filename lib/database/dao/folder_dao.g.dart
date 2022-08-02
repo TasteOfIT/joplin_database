@@ -37,12 +37,21 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
     }).map(folders.mapFromRow);
   }
 
-  Future<int> addFolder(Insertable<Folder> folder) {
+  Future<int> insertFolder(Insertable<Folder> folder) {
     final generatedfolder = $writeInsertable(this.folders, folder);
     return customInsert(
       'INSERT INTO folders ${generatedfolder.sql}',
       variables: [...generatedfolder.introducedVariables],
       updates: {folders},
+    );
+  }
+
+  Future<int> deleteFolder(String? id) {
+    return customUpdate(
+      'DELETE FROM folders WHERE id = :id',
+      variables: [Variable<String?>(id)],
+      updates: {folders},
+      updateKind: UpdateKind.delete,
     );
   }
 }

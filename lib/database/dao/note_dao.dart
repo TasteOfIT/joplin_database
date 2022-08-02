@@ -8,7 +8,15 @@ part 'note_dao.g.dart';
 class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
   NoteDao(JoplinDatabase db) : super(db);
 
-  Future<List<Note>> getNotes() {
-    return allNotes().get();
+  Stream<List<Note>> getNotes() {
+    return allNotes().watch();
+  }
+
+  Future<int> addNote(Note note) {
+    return insertNote(note);
+  }
+
+  Future<int> removeNote(String id) {
+    return deleteNote(id);
   }
 }

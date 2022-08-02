@@ -36,4 +36,22 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
       notes,
     }).map(notes.mapFromRow);
   }
+
+  Future<int> insertNote(Insertable<Note> note) {
+    final generatednote = $writeInsertable(this.notes, note);
+    return customInsert(
+      'INSERT INTO notes ${generatednote.sql}',
+      variables: [...generatednote.introducedVariables],
+      updates: {notes},
+    );
+  }
+
+  Future<int> deleteNote(String? id) {
+    return customUpdate(
+      'DELETE FROM notes WHERE id = :id',
+      variables: [Variable<String?>(id)],
+      updates: {notes},
+      updateKind: UpdateKind.delete,
+    );
+  }
 }

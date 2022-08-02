@@ -1,4 +1,5 @@
 import '../../tables/tables.drift';
 
 allFolders: SELECT * FROM folders;
-addFolder: INSERT INTO folders $folder;
+insertFolder: INSERT INTO folders $folder;
+deleteFolder: DELETE FROM folders WHERE id = :id;
