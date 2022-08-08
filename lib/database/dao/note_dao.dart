@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../database.dart';
+import '../utils/uuid_utils.dart';
 
 part 'note_dao.g.dart';
 
@@ -13,7 +14,7 @@ class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
   }
 
   Future<int> addNote(Note note) {
-    return insertNote(note);
+    return insertNote(note.copyWith(id: UuidUtils.id()));
   }
 
   Future<int> removeNote(String id) {

@@ -16,6 +16,7 @@ dependencies:
   path: ^1.8.1
   # Dependency injection
   flutter_modular: ^5.0.3
+  uuid: ^3.0.6
 
 dev_dependencies:
   flutter_test:

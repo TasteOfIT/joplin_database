@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../database.dart';
+import '../utils/uuid_utils.dart';
 
 part 'folder_dao.g.dart';
 
@@ -13,7 +14,7 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
   }
 
   Future<int> addFolder(Folder folder) {
-    return insertFolder(folder);
+    return insertFolder(folder.copyWith(id: UuidUtils.id()));
   }
 
   Future<int> removeFolder(String id) {
