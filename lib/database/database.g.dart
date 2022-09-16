@@ -3,7 +3,7 @@
 part of 'database.dart';
 
 // **************************************************************************
-// MoorGenerator
+// DriftDatabaseGenerator
 // **************************************************************************
 
 // ignore_for_file: type=lint
@@ -21,7 +21,7 @@ class Folder extends DataClass implements Insertable<Folder> {
   final String shareId;
   final String masterKeyId;
   final String icon;
-  Folder(
+  const Folder(
       {this.id,
       required this.title,
       required this.createdTime,
@@ -35,42 +35,11 @@ class Folder extends DataClass implements Insertable<Folder> {
       required this.shareId,
       required this.masterKeyId,
       required this.icon});
-  factory Folder.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Folder(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-      isShared: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared'])!,
-      shareId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}share_id'])!,
-      masterKeyId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}master_key_id'])!,
-      icon: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}icon'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['title'] = Variable<String>(title);
     map['created_time'] = Variable<int>(createdTime);
@@ -146,7 +115,7 @@ class Folder extends DataClass implements Insertable<Folder> {
   }
 
   Folder copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? title,
           int? createdTime,
           int? updatedTime,
@@ -160,7 +129,7 @@ class Folder extends DataClass implements Insertable<Folder> {
           String? masterKeyId,
           String? icon}) =>
       Folder(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         title: title ?? this.title,
         createdTime: createdTime ?? this.createdTime,
         updatedTime: updatedTime ?? this.updatedTime,
@@ -274,7 +243,7 @@ class FoldersCompanion extends UpdateCompanion<Folder> {
   })  : createdTime = Value(createdTime),
         updatedTime = Value(updatedTime);
   static Insertable<Folder> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? title,
     Expression<int>? createdTime,
     Expression<int>? updatedTime,
@@ -341,7 +310,7 @@ class FoldersCompanion extends UpdateCompanion<Folder> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -410,97 +379,97 @@ class Folders extends Table with TableInfo<Folders, Folder> {
   final String? _alias;
   Folders(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
-  late final GeneratedColumn<int?> isShared = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isShared = GeneratedColumn<int>(
       'is_shared', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _shareIdMeta = const VerificationMeta('shareId');
-  late final GeneratedColumn<String?> shareId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> shareId = GeneratedColumn<String>(
       'share_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _masterKeyIdMeta =
       const VerificationMeta('masterKeyId');
-  late final GeneratedColumn<String?> masterKeyId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> masterKeyId = GeneratedColumn<String>(
       'master_key_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _iconMeta = const VerificationMeta('icon');
-  late final GeneratedColumn<String?> icon = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> icon = GeneratedColumn<String>(
       'icon', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
@@ -605,8 +574,36 @@ class Folders extends Table with TableInfo<Folders, Folder> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Folder map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Folder.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Folder(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+      isShared: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_shared'])!,
+      shareId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}share_id'])!,
+      masterKeyId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}master_key_id'])!,
+      icon: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}icon'])!,
+    );
   }
 
   @override
@@ -629,7 +626,7 @@ class Tag extends DataClass implements Insertable<Tag> {
   final int encryptionApplied;
   final int isShared;
   final String parentId;
-  Tag(
+  const Tag(
       {this.id,
       required this.title,
       required this.createdTime,
@@ -640,36 +637,11 @@ class Tag extends DataClass implements Insertable<Tag> {
       required this.encryptionApplied,
       required this.isShared,
       required this.parentId});
-  factory Tag.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Tag(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      isShared: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared'])!,
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['title'] = Variable<String>(title);
     map['created_time'] = Variable<int>(createdTime);
@@ -733,7 +705,7 @@ class Tag extends DataClass implements Insertable<Tag> {
   }
 
   Tag copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? title,
           int? createdTime,
           int? updatedTime,
@@ -744,7 +716,7 @@ class Tag extends DataClass implements Insertable<Tag> {
           int? isShared,
           String? parentId}) =>
       Tag(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         title: title ?? this.title,
         createdTime: createdTime ?? this.createdTime,
         updatedTime: updatedTime ?? this.updatedTime,
@@ -837,7 +809,7 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   })  : createdTime = Value(createdTime),
         updatedTime = Value(updatedTime);
   static Insertable<Tag> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? title,
     Expression<int>? createdTime,
     Expression<int>? updatedTime,
@@ -892,7 +864,7 @@ class TagsCompanion extends UpdateCompanion<Tag> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -949,75 +921,75 @@ class Tags extends Table with TableInfo<Tags, Tag> {
   final String? _alias;
   Tags(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
-  late final GeneratedColumn<int?> isShared = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isShared = GeneratedColumn<int>(
       'is_shared', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
@@ -1105,8 +1077,30 @@ class Tags extends Table with TableInfo<Tags, Tag> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Tag map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Tag.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Tag(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      isShared: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_shared'])!,
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+    );
   }
 
   @override
@@ -1129,7 +1123,7 @@ class NoteTag extends DataClass implements Insertable<NoteTag> {
   final String encryptionCipherText;
   final int encryptionApplied;
   final int isShared;
-  NoteTag(
+  const NoteTag(
       {this.id,
       required this.noteId,
       required this.tagId,
@@ -1140,36 +1134,11 @@ class NoteTag extends DataClass implements Insertable<NoteTag> {
       required this.encryptionCipherText,
       required this.encryptionApplied,
       required this.isShared});
-  factory NoteTag.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NoteTag(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      noteId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}note_id'])!,
-      tagId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}tag_id'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      isShared: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['note_id'] = Variable<String>(noteId);
     map['tag_id'] = Variable<String>(tagId);
@@ -1233,7 +1202,7 @@ class NoteTag extends DataClass implements Insertable<NoteTag> {
   }
 
   NoteTag copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? noteId,
           String? tagId,
           int? createdTime,
@@ -1244,7 +1213,7 @@ class NoteTag extends DataClass implements Insertable<NoteTag> {
           int? encryptionApplied,
           int? isShared}) =>
       NoteTag(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         noteId: noteId ?? this.noteId,
         tagId: tagId ?? this.tagId,
         createdTime: createdTime ?? this.createdTime,
@@ -1339,7 +1308,7 @@ class NoteTagsCompanion extends UpdateCompanion<NoteTag> {
         createdTime = Value(createdTime),
         updatedTime = Value(updatedTime);
   static Insertable<NoteTag> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? noteId,
     Expression<String>? tagId,
     Expression<int>? createdTime,
@@ -1394,7 +1363,7 @@ class NoteTagsCompanion extends UpdateCompanion<NoteTag> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (noteId.present) {
       map['note_id'] = Variable<String>(noteId.value);
@@ -1451,73 +1420,73 @@ class NoteTags extends Table with TableInfo<NoteTags, NoteTag> {
   final String? _alias;
   NoteTags(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
-  late final GeneratedColumn<String?> noteId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
       'note_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _tagIdMeta = const VerificationMeta('tagId');
-  late final GeneratedColumn<String?> tagId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> tagId = GeneratedColumn<String>(
       'tag_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
-  late final GeneratedColumn<int?> isShared = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isShared = GeneratedColumn<int>(
       'is_shared', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
@@ -1609,8 +1578,30 @@ class NoteTags extends Table with TableInfo<NoteTags, NoteTag> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   NoteTag map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NoteTag.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NoteTag(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      noteId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}note_id'])!,
+      tagId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}tag_id'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      isShared: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_shared'])!,
+    );
   }
 
   @override
@@ -1632,7 +1623,7 @@ class SyncItem extends DataClass implements Insertable<SyncItem> {
   final String syncDisabledReason;
   final int forceSync;
   final int itemLocation;
-  SyncItem(
+  const SyncItem(
       {required this.id,
       required this.syncTarget,
       required this.syncTime,
@@ -1642,29 +1633,6 @@ class SyncItem extends DataClass implements Insertable<SyncItem> {
       required this.syncDisabledReason,
       required this.forceSync,
       required this.itemLocation});
-  factory SyncItem.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return SyncItem(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      syncTarget: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sync_target'])!,
-      syncTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sync_time'])!,
-      itemType: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_type'])!,
-      itemId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_id'])!,
-      syncDisabled: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sync_disabled'])!,
-      syncDisabledReason: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}sync_disabled_reason'])!,
-      forceSync: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}force_sync'])!,
-      itemLocation: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_location'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1919,64 +1887,64 @@ class SyncItems extends Table with TableInfo<SyncItems, SyncItem> {
   final String? _alias;
   SyncItems(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _syncTargetMeta = const VerificationMeta('syncTarget');
-  late final GeneratedColumn<int?> syncTarget = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> syncTarget = GeneratedColumn<int>(
       'sync_target', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _syncTimeMeta = const VerificationMeta('syncTime');
-  late final GeneratedColumn<int?> syncTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> syncTime = GeneratedColumn<int>(
       'sync_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _itemTypeMeta = const VerificationMeta('itemType');
-  late final GeneratedColumn<int?> itemType = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemType = GeneratedColumn<int>(
       'item_type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
-  late final GeneratedColumn<String?> itemId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> itemId = GeneratedColumn<String>(
       'item_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _syncDisabledMeta =
       const VerificationMeta('syncDisabled');
-  late final GeneratedColumn<int?> syncDisabled = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> syncDisabled = GeneratedColumn<int>(
       'sync_disabled', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'0\'',
       defaultValue: const CustomExpression<int>('\'0\''));
   final VerificationMeta _syncDisabledReasonMeta =
       const VerificationMeta('syncDisabledReason');
-  late final GeneratedColumn<String?> syncDisabledReason =
-      GeneratedColumn<String?>('sync_disabled_reason', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> syncDisabledReason =
+      GeneratedColumn<String>('sync_disabled_reason', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _forceSyncMeta = const VerificationMeta('forceSync');
-  late final GeneratedColumn<int?> forceSync = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> forceSync = GeneratedColumn<int>(
       'force_sync', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _itemLocationMeta =
       const VerificationMeta('itemLocation');
-  late final GeneratedColumn<int?> itemLocation = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemLocation = GeneratedColumn<int>(
       'item_location', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 1',
       defaultValue: const CustomExpression<int>('1'));
@@ -2057,8 +2025,27 @@ class SyncItems extends Table with TableInfo<SyncItems, SyncItem> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   SyncItem map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return SyncItem.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncItem(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      syncTarget: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_target'])!,
+      syncTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_time'])!,
+      itemType: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_type'])!,
+      itemId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}item_id'])!,
+      syncDisabled: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_disabled'])!,
+      syncDisabledReason: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}sync_disabled_reason'])!,
+      forceSync: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}force_sync'])!,
+      itemLocation: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_location'])!,
+    );
   }
 
   @override
@@ -2076,27 +2063,12 @@ class DeletedItem extends DataClass implements Insertable<DeletedItem> {
   final String itemId;
   final int deletedTime;
   final int syncTarget;
-  DeletedItem(
+  const DeletedItem(
       {required this.id,
       required this.itemType,
       required this.itemId,
       required this.deletedTime,
       required this.syncTarget});
-  factory DeletedItem.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return DeletedItem(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      itemType: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_type'])!,
-      itemId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_id'])!,
-      deletedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}deleted_time'])!,
-      syncTarget: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sync_target'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2274,34 +2246,34 @@ class DeletedItems extends Table with TableInfo<DeletedItems, DeletedItem> {
   final String? _alias;
   DeletedItems(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _itemTypeMeta = const VerificationMeta('itemType');
-  late final GeneratedColumn<int?> itemType = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemType = GeneratedColumn<int>(
       'item_type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
-  late final GeneratedColumn<String?> itemId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> itemId = GeneratedColumn<String>(
       'item_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _deletedTimeMeta =
       const VerificationMeta('deletedTime');
-  late final GeneratedColumn<int?> deletedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> deletedTime = GeneratedColumn<int>(
       'deleted_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _syncTargetMeta = const VerificationMeta('syncTarget');
-  late final GeneratedColumn<int?> syncTarget = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> syncTarget = GeneratedColumn<int>(
       'sync_target', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -2354,8 +2326,19 @@ class DeletedItems extends Table with TableInfo<DeletedItems, DeletedItem> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   DeletedItem map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return DeletedItem.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DeletedItem(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      itemType: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_type'])!,
+      itemId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}item_id'])!,
+      deletedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}deleted_time'])!,
+      syncTarget: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}sync_target'])!,
+    );
   }
 
   @override
@@ -2371,18 +2354,8 @@ class Alarm extends DataClass implements Insertable<Alarm> {
   final int id;
   final String noteId;
   final int triggerTime;
-  Alarm({required this.id, required this.noteId, required this.triggerTime});
-  factory Alarm.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Alarm(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      noteId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}note_id'])!,
-      triggerTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}trigger_time'])!,
-    );
-  }
+  const Alarm(
+      {required this.id, required this.noteId, required this.triggerTime});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2513,22 +2486,22 @@ class Alarms extends Table with TableInfo<Alarms, Alarm> {
   final String? _alias;
   Alarms(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
-  late final GeneratedColumn<String?> noteId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
       'note_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _triggerTimeMeta =
       const VerificationMeta('triggerTime');
-  late final GeneratedColumn<int?> triggerTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> triggerTime = GeneratedColumn<int>(
       'trigger_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -2566,8 +2539,15 @@ class Alarms extends Table with TableInfo<Alarms, Alarm> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Alarm map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Alarm.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Alarm(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      noteId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}note_id'])!,
+      triggerTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}trigger_time'])!,
+    );
   }
 
   @override
@@ -2587,7 +2567,7 @@ class ItemChange extends DataClass implements Insertable<ItemChange> {
   final int createdTime;
   final int source;
   final String beforeChangeItem;
-  ItemChange(
+  const ItemChange(
       {required this.id,
       required this.itemType,
       required this.itemId,
@@ -2595,25 +2575,6 @@ class ItemChange extends DataClass implements Insertable<ItemChange> {
       required this.createdTime,
       required this.source,
       required this.beforeChangeItem});
-  factory ItemChange.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return ItemChange(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      itemType: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_type'])!,
-      itemId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_id'])!,
-      type: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      source: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}source'])!,
-      beforeChangeItem: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}before_change_item'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2829,51 +2790,51 @@ class ItemChanges extends Table with TableInfo<ItemChanges, ItemChange> {
   final String? _alias;
   ItemChanges(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _itemTypeMeta = const VerificationMeta('itemType');
-  late final GeneratedColumn<int?> itemType = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemType = GeneratedColumn<int>(
       'item_type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
-  late final GeneratedColumn<String?> itemId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> itemId = GeneratedColumn<String>(
       'item_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  late final GeneratedColumn<int?> type = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> type = GeneratedColumn<int>(
       'type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _sourceMeta = const VerificationMeta('source');
-  late final GeneratedColumn<int?> source = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> source = GeneratedColumn<int>(
       'source', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 1',
       defaultValue: const CustomExpression<int>('1'));
   final VerificationMeta _beforeChangeItemMeta =
       const VerificationMeta('beforeChangeItem');
-  late final GeneratedColumn<String?> beforeChangeItem =
-      GeneratedColumn<String?>('before_change_item', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: false,
-          $customConstraints: 'NOT NULL DEFAULT \'\'',
-          defaultValue: const CustomExpression<String>('\'\''));
+  late final GeneratedColumn<String> beforeChangeItem = GeneratedColumn<String>(
+      'before_change_item', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT \'\'',
+      defaultValue: const CustomExpression<String>('\'\''));
   @override
   List<GeneratedColumn> get $columns =>
       [id, itemType, itemId, type, createdTime, source, beforeChangeItem];
@@ -2932,8 +2893,23 @@ class ItemChanges extends Table with TableInfo<ItemChanges, ItemChange> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ItemChange map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return ItemChange.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ItemChange(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      itemType: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_type'])!,
+      itemId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}item_id'])!,
+      type: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      source: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}source'])!,
+      beforeChangeItem: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}before_change_item'])!,
+    );
   }
 
   @override
@@ -2951,27 +2927,12 @@ class NoteResource extends DataClass implements Insertable<NoteResource> {
   final String resourceId;
   final int isAssociated;
   final int lastSeenTime;
-  NoteResource(
+  const NoteResource(
       {required this.id,
       required this.noteId,
       required this.resourceId,
       required this.isAssociated,
       required this.lastSeenTime});
-  factory NoteResource.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NoteResource(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      noteId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}note_id'])!,
-      resourceId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}resource_id'])!,
-      isAssociated: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_associated'])!,
-      lastSeenTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_seen_time'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3149,35 +3110,35 @@ class NoteResources extends Table with TableInfo<NoteResources, NoteResource> {
   final String? _alias;
   NoteResources(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _noteIdMeta = const VerificationMeta('noteId');
-  late final GeneratedColumn<String?> noteId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> noteId = GeneratedColumn<String>(
       'note_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _resourceIdMeta = const VerificationMeta('resourceId');
-  late final GeneratedColumn<String?> resourceId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> resourceId = GeneratedColumn<String>(
       'resource_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _isAssociatedMeta =
       const VerificationMeta('isAssociated');
-  late final GeneratedColumn<int?> isAssociated = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isAssociated = GeneratedColumn<int>(
       'is_associated', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _lastSeenTimeMeta =
       const VerificationMeta('lastSeenTime');
-  late final GeneratedColumn<int?> lastSeenTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> lastSeenTime = GeneratedColumn<int>(
       'last_seen_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -3232,8 +3193,19 @@ class NoteResources extends Table with TableInfo<NoteResources, NoteResource> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   NoteResource map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NoteResource.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NoteResource(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      noteId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}note_id'])!,
+      resourceId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_id'])!,
+      isAssociated: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_associated'])!,
+      lastSeenTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}last_seen_time'])!,
+    );
   }
 
   @override
@@ -3251,25 +3223,11 @@ class ResourceLocalState extends DataClass
   final String resourceId;
   final int fetchStatus;
   final String fetchError;
-  ResourceLocalState(
+  const ResourceLocalState(
       {required this.id,
       required this.resourceId,
       required this.fetchStatus,
       required this.fetchError});
-  factory ResourceLocalState.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return ResourceLocalState(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      resourceId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}resource_id'])!,
-      fetchStatus: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}fetch_status'])!,
-      fetchError: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}fetch_error'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3425,29 +3383,29 @@ class ResourceLocalStates extends Table
   final String? _alias;
   ResourceLocalStates(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _resourceIdMeta = const VerificationMeta('resourceId');
-  late final GeneratedColumn<String?> resourceId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> resourceId = GeneratedColumn<String>(
       'resource_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _fetchStatusMeta =
       const VerificationMeta('fetchStatus');
-  late final GeneratedColumn<int?> fetchStatus = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> fetchStatus = GeneratedColumn<int>(
       'fetch_status', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'2\'',
       defaultValue: const CustomExpression<int>('\'2\''));
   final VerificationMeta _fetchErrorMeta = const VerificationMeta('fetchError');
-  late final GeneratedColumn<String?> fetchError = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> fetchError = GeneratedColumn<String>(
       'fetch_error', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
@@ -3493,8 +3451,17 @@ class ResourceLocalStates extends Table
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ResourceLocalState map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return ResourceLocalState.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ResourceLocalState(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      resourceId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_id'])!,
+      fetchStatus: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}fetch_status'])!,
+      fetchError: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}fetch_error'])!,
+    );
   }
 
   @override
@@ -3519,7 +3486,7 @@ class Revision extends DataClass implements Insertable<Revision> {
   final int encryptionApplied;
   final int updatedTime;
   final int createdTime;
-  Revision(
+  const Revision(
       {this.id,
       required this.parentId,
       required this.itemType,
@@ -3532,40 +3499,11 @@ class Revision extends DataClass implements Insertable<Revision> {
       required this.encryptionApplied,
       required this.updatedTime,
       required this.createdTime});
-  factory Revision.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Revision(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-      itemType: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_type'])!,
-      itemId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}item_id'])!,
-      itemUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}item_updated_time'])!,
-      titleDiff: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title_diff'])!,
-      bodyDiff: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}body_diff'])!,
-      metadataDiff: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}metadata_diff'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['parent_id'] = Variable<String>(parentId);
     map['item_type'] = Variable<int>(itemType);
@@ -3637,7 +3575,7 @@ class Revision extends DataClass implements Insertable<Revision> {
   }
 
   Revision copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? parentId,
           int? itemType,
           String? itemId,
@@ -3650,7 +3588,7 @@ class Revision extends DataClass implements Insertable<Revision> {
           int? updatedTime,
           int? createdTime}) =>
       Revision(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         parentId: parentId ?? this.parentId,
         itemType: itemType ?? this.itemType,
         itemId: itemId ?? this.itemId,
@@ -3760,7 +3698,7 @@ class RevisionsCompanion extends UpdateCompanion<Revision> {
         updatedTime = Value(updatedTime),
         createdTime = Value(createdTime);
   static Insertable<Revision> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? parentId,
     Expression<int>? itemType,
     Expression<String>? itemId,
@@ -3823,7 +3761,7 @@ class RevisionsCompanion extends UpdateCompanion<Revision> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (parentId.present) {
       map['parent_id'] = Variable<String>(parentId.value);
@@ -3888,87 +3826,87 @@ class Revisions extends Table with TableInfo<Revisions, Revision> {
   final String? _alias;
   Revisions(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _itemTypeMeta = const VerificationMeta('itemType');
-  late final GeneratedColumn<int?> itemType = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemType = GeneratedColumn<int>(
       'item_type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _itemIdMeta = const VerificationMeta('itemId');
-  late final GeneratedColumn<String?> itemId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> itemId = GeneratedColumn<String>(
       'item_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _itemUpdatedTimeMeta =
       const VerificationMeta('itemUpdatedTime');
-  late final GeneratedColumn<int?> itemUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> itemUpdatedTime = GeneratedColumn<int>(
       'item_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _titleDiffMeta = const VerificationMeta('titleDiff');
-  late final GeneratedColumn<String?> titleDiff = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> titleDiff = GeneratedColumn<String>(
       'title_diff', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _bodyDiffMeta = const VerificationMeta('bodyDiff');
-  late final GeneratedColumn<String?> bodyDiff = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> bodyDiff = GeneratedColumn<String>(
       'body_diff', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _metadataDiffMeta =
       const VerificationMeta('metadataDiff');
-  late final GeneratedColumn<String?> metadataDiff = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> metadataDiff = GeneratedColumn<String>(
       'metadata_diff', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -4071,8 +4009,34 @@ class Revisions extends Table with TableInfo<Revisions, Revision> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Revision map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Revision.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Revision(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+      itemType: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_type'])!,
+      itemId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}item_id'])!,
+      itemUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}item_updated_time'])!,
+      titleDiff: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title_diff'])!,
+      bodyDiff: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}body_diff'])!,
+      metadataDiff: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}metadata_diff'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+    );
   }
 
   @override
@@ -4090,25 +4054,11 @@ class ResourcesToDownloadData extends DataClass
   final String resourceId;
   final int updatedTime;
   final int createdTime;
-  ResourcesToDownloadData(
+  const ResourcesToDownloadData(
       {required this.id,
       required this.resourceId,
       required this.updatedTime,
       required this.createdTime});
-  factory ResourcesToDownloadData.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return ResourcesToDownloadData(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      resourceId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}resource_id'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4264,29 +4214,29 @@ class ResourcesToDownload extends Table
   final String? _alias;
   ResourcesToDownload(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _resourceIdMeta = const VerificationMeta('resourceId');
-  late final GeneratedColumn<String?> resourceId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> resourceId = GeneratedColumn<String>(
       'resource_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -4337,8 +4287,17 @@ class ResourcesToDownload extends Table
   @override
   ResourcesToDownloadData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
-    return ResourcesToDownloadData.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ResourcesToDownloadData(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      resourceId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_id'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+    );
   }
 
   @override
@@ -4356,27 +4315,12 @@ class KeyValue extends DataClass implements Insertable<KeyValue> {
   final String value;
   final int type;
   final int updatedTime;
-  KeyValue(
+  const KeyValue(
       {required this.id,
       required this.key,
       required this.value,
       required this.type,
       required this.updatedTime});
-  factory KeyValue.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return KeyValue(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      key: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}key'])!,
-      value: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}value'])!,
-      type: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4549,34 +4493,34 @@ class KeyValues extends Table with TableInfo<KeyValues, KeyValue> {
   final String? _alias;
   KeyValues(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _keyMeta = const VerificationMeta('key');
-  late final GeneratedColumn<String?> key = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
       'key', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _valueMeta = const VerificationMeta('value');
-  late final GeneratedColumn<String?> value = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
       'value', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  late final GeneratedColumn<int?> type = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> type = GeneratedColumn<int>(
       'type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -4626,8 +4570,19 @@ class KeyValues extends Table with TableInfo<KeyValues, KeyValue> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   KeyValue map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return KeyValue.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return KeyValue(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      key: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}key'])!,
+      value: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+      type: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+    );
   }
 
   @override
@@ -4656,7 +4611,7 @@ class Resource extends DataClass implements Insertable<Resource> {
   final int isShared;
   final String shareId;
   final String masterKeyId;
-  Resource(
+  const Resource(
       {this.id,
       required this.title,
       required this.mime,
@@ -4673,48 +4628,11 @@ class Resource extends DataClass implements Insertable<Resource> {
       required this.isShared,
       required this.shareId,
       required this.masterKeyId});
-  factory Resource.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Resource(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      mime: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}mime'])!,
-      filename: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}filename'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      fileExtension: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}file_extension'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      encryptionBlobEncrypted: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_blob_encrypted'])!,
-      size: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}size'])!,
-      isShared: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared'])!,
-      shareId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}share_id'])!,
-      masterKeyId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}master_key_id'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['title'] = Variable<String>(title);
     map['mime'] = Variable<String>(mime);
@@ -4804,7 +4722,7 @@ class Resource extends DataClass implements Insertable<Resource> {
   }
 
   Resource copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? title,
           String? mime,
           String? filename,
@@ -4821,7 +4739,7 @@ class Resource extends DataClass implements Insertable<Resource> {
           String? shareId,
           String? masterKeyId}) =>
       Resource(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         title: title ?? this.title,
         mime: mime ?? this.mime,
         filename: filename ?? this.filename,
@@ -4958,7 +4876,7 @@ class ResourcesCompanion extends UpdateCompanion<Resource> {
         createdTime = Value(createdTime),
         updatedTime = Value(updatedTime);
   static Insertable<Resource> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? title,
     Expression<String>? mime,
     Expression<String>? filename,
@@ -5039,7 +4957,7 @@ class ResourcesCompanion extends UpdateCompanion<Resource> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -5121,119 +5039,119 @@ class Resources extends Table with TableInfo<Resources, Resource> {
   final String? _alias;
   Resources(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _mimeMeta = const VerificationMeta('mime');
-  late final GeneratedColumn<String?> mime = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> mime = GeneratedColumn<String>(
       'mime', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _filenameMeta = const VerificationMeta('filename');
-  late final GeneratedColumn<String?> filename = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> filename = GeneratedColumn<String>(
       'filename', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _fileExtensionMeta =
       const VerificationMeta('fileExtension');
-  late final GeneratedColumn<String?> fileExtension = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> fileExtension = GeneratedColumn<String>(
       'file_extension', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _encryptionBlobEncryptedMeta =
       const VerificationMeta('encryptionBlobEncrypted');
-  late final GeneratedColumn<int?> encryptionBlobEncrypted =
-      GeneratedColumn<int?>('encryption_blob_encrypted', aliasedName, false,
-          type: const IntType(),
+  late final GeneratedColumn<int> encryptionBlobEncrypted =
+      GeneratedColumn<int>('encryption_blob_encrypted', aliasedName, false,
+          type: DriftSqlType.int,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT 0',
           defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _sizeMeta = const VerificationMeta('size');
-  late final GeneratedColumn<int?> size = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> size = GeneratedColumn<int>(
       'size', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT -1',
       defaultValue: const CustomExpression<int>('-1'));
   final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
-  late final GeneratedColumn<int?> isShared = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isShared = GeneratedColumn<int>(
       'is_shared', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _shareIdMeta = const VerificationMeta('shareId');
-  late final GeneratedColumn<String?> shareId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> shareId = GeneratedColumn<String>(
       'share_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _masterKeyIdMeta =
       const VerificationMeta('masterKeyId');
-  late final GeneratedColumn<String?> masterKeyId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> masterKeyId = GeneratedColumn<String>(
       'master_key_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
@@ -5360,8 +5278,43 @@ class Resources extends Table with TableInfo<Resources, Resource> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Resource map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Resource.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Resource(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      mime: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}mime'])!,
+      filename: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}filename'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      fileExtension: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}file_extension'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      encryptionBlobEncrypted: attachedDatabase.options.types.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}encryption_blob_encrypted'])!,
+      size: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}size'])!,
+      isShared: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_shared'])!,
+      shareId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}share_id'])!,
+      masterKeyId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}master_key_id'])!,
+    );
   }
 
   @override
@@ -5388,7 +5341,7 @@ class NotesNormalizedData extends DataClass
   final double altitude;
   final String sourceUrl;
   final int todoDue;
-  NotesNormalizedData(
+  const NotesNormalizedData(
       {required this.id,
       required this.title,
       required this.body,
@@ -5402,38 +5355,6 @@ class NotesNormalizedData extends DataClass
       required this.altitude,
       required this.sourceUrl,
       required this.todoDue});
-  factory NotesNormalizedData.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NotesNormalizedData(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      body: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}body'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      isTodo: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_todo'])!,
-      todoCompleted: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}todo_completed'])!,
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-      latitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}latitude'])!,
-      longitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}longitude'])!,
-      altitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}altitude'])!,
-      sourceUrl: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}source_url'])!,
-      todoDue: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}todo_due'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -5773,95 +5694,95 @@ class NotesNormalized extends Table
   final String? _alias;
   NotesNormalized(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _bodyMeta = const VerificationMeta('body');
-  late final GeneratedColumn<String?> body = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
       'body', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _isTodoMeta = const VerificationMeta('isTodo');
-  late final GeneratedColumn<int?> isTodo = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isTodo = GeneratedColumn<int>(
       'is_todo', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _todoCompletedMeta =
       const VerificationMeta('todoCompleted');
-  late final GeneratedColumn<int?> todoCompleted = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> todoCompleted = GeneratedColumn<int>(
       'todo_completed', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
-  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
       'latitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
-  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
       'longitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _altitudeMeta = const VerificationMeta('altitude');
-  late final GeneratedColumn<double?> altitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> altitude = GeneratedColumn<double>(
       'altitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _sourceUrlMeta = const VerificationMeta('sourceUrl');
-  late final GeneratedColumn<String?> sourceUrl = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> sourceUrl = GeneratedColumn<String>(
       'source_url', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _todoDueMeta = const VerificationMeta('todoDue');
-  late final GeneratedColumn<int?> todoDue = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> todoDue = GeneratedColumn<int>(
       'todo_due', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
@@ -5957,8 +5878,35 @@ class NotesNormalized extends Table
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   NotesNormalizedData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NotesNormalizedData.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotesNormalizedData(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      body: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      isTodo: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_todo'])!,
+      todoCompleted: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}todo_completed'])!,
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+      latitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude'])!,
+      altitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}altitude'])!,
+      sourceUrl: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}source_url'])!,
+      todoDue: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}todo_due'])!,
+    );
   }
 
   @override
@@ -5983,7 +5931,7 @@ class NotesFt extends DataClass implements Insertable<NotesFt> {
   final String longitude;
   final String altitude;
   final String sourceUrl;
-  NotesFt(
+  const NotesFt(
       {required this.id,
       required this.title,
       required this.body,
@@ -5996,35 +5944,6 @@ class NotesFt extends DataClass implements Insertable<NotesFt> {
       required this.longitude,
       required this.altitude,
       required this.sourceUrl});
-  factory NotesFt.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return NotesFt(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      body: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}body'])!,
-      userCreatedTime: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      isTodo: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_todo'])!,
-      todoCompleted: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}todo_completed'])!,
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-      latitude: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}latitude'])!,
-      longitude: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}longitude'])!,
-      altitude: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}altitude'])!,
-      sourceUrl: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}source_url'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -6355,78 +6274,78 @@ class NotesFts extends Table
   final String? _alias;
   NotesFts(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _bodyMeta = const VerificationMeta('body');
-  late final GeneratedColumn<String?> body = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
       'body', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<String?> userCreatedTime =
-      GeneratedColumn<String?>('user_created_time', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: true,
-          $customConstraints: '');
+  late final GeneratedColumn<String> userCreatedTime = GeneratedColumn<String>(
+      'user_created_time', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<String?> userUpdatedTime =
-      GeneratedColumn<String?>('user_updated_time', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: true,
-          $customConstraints: '');
+  late final GeneratedColumn<String> userUpdatedTime = GeneratedColumn<String>(
+      'user_updated_time', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
   final VerificationMeta _isTodoMeta = const VerificationMeta('isTodo');
-  late final GeneratedColumn<String?> isTodo = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> isTodo = GeneratedColumn<String>(
       'is_todo', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _todoCompletedMeta =
       const VerificationMeta('todoCompleted');
-  late final GeneratedColumn<String?> todoCompleted = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> todoCompleted = GeneratedColumn<String>(
       'todo_completed', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
-  late final GeneratedColumn<String?> latitude = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
       'latitude', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
-  late final GeneratedColumn<String?> longitude = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
       'longitude', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _altitudeMeta = const VerificationMeta('altitude');
-  late final GeneratedColumn<String?> altitude = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> altitude = GeneratedColumn<String>(
       'altitude', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   final VerificationMeta _sourceUrlMeta = const VerificationMeta('sourceUrl');
-  late final GeneratedColumn<String?> sourceUrl = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> sourceUrl = GeneratedColumn<String>(
       'source_url', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: '');
   @override
@@ -6537,8 +6456,33 @@ class NotesFts extends Table
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   NotesFt map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return NotesFt.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotesFt(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      body: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
+      userCreatedTime: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}user_updated_time'])!,
+      isTodo: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}is_todo'])!,
+      todoCompleted: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}todo_completed'])!,
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+      latitude: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude'])!,
+      altitude: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}altitude'])!,
+      sourceUrl: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}source_url'])!,
+    );
   }
 
   @override
@@ -6582,7 +6526,7 @@ class Note extends DataClass implements Insertable<Note> {
   final String shareId;
   final String conflictOriginalId;
   final String masterKeyId;
-  Note(
+  const Note(
       {this.id,
       required this.parentId,
       required this.title,
@@ -6611,72 +6555,11 @@ class Note extends DataClass implements Insertable<Note> {
       required this.shareId,
       required this.conflictOriginalId,
       required this.masterKeyId});
-  factory Note.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Note(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      parentId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_id'])!,
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      body: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}body'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      isConflict: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_conflict'])!,
-      latitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}latitude'])!,
-      longitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}longitude'])!,
-      altitude: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}altitude'])!,
-      author: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}author'])!,
-      sourceUrl: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}source_url'])!,
-      isTodo: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_todo'])!,
-      todoDue: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}todo_due'])!,
-      todoCompleted: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}todo_completed'])!,
-      source: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}source'])!,
-      sourceApplication: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}source_application'])!,
-      applicationData: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}application_data'])!,
-      order: const RealType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}order'])!,
-      userCreatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_created_time'])!,
-      userUpdatedTime: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}user_updated_time'])!,
-      encryptionCipherText: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_cipher_text'])!,
-      encryptionApplied: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_applied'])!,
-      markupLanguage: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}markup_language'])!,
-      isShared: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared'])!,
-      shareId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}share_id'])!,
-      conflictOriginalId: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}conflict_original_id'])!,
-      masterKeyId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}master_key_id'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['parent_id'] = Variable<String>(parentId);
     map['title'] = Variable<String>(title);
@@ -6814,7 +6697,7 @@ class Note extends DataClass implements Insertable<Note> {
   }
 
   Note copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? parentId,
           String? title,
           String? body,
@@ -6843,7 +6726,7 @@ class Note extends DataClass implements Insertable<Note> {
           String? conflictOriginalId,
           String? masterKeyId}) =>
       Note(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         parentId: parentId ?? this.parentId,
         title: title ?? this.title,
         body: body ?? this.body,
@@ -7063,7 +6946,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   })  : createdTime = Value(createdTime),
         updatedTime = Value(updatedTime);
   static Insertable<Note> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<String>? parentId,
     Expression<String>? title,
     Expression<String>? body,
@@ -7191,7 +7074,7 @@ class NotesCompanion extends UpdateCompanion<Note> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (parentId.present) {
       map['parent_id'] = Variable<String>(parentId.value);
@@ -7320,207 +7203,207 @@ class Notes extends Table with TableInfo<Notes, Note> {
   final String? _alias;
   Notes(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _parentIdMeta = const VerificationMeta('parentId');
-  late final GeneratedColumn<String?> parentId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> parentId = GeneratedColumn<String>(
       'parent_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _bodyMeta = const VerificationMeta('body');
-  late final GeneratedColumn<String?> body = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
       'body', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _isConflictMeta = const VerificationMeta('isConflict');
-  late final GeneratedColumn<int?> isConflict = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isConflict = GeneratedColumn<int>(
       'is_conflict', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _latitudeMeta = const VerificationMeta('latitude');
-  late final GeneratedColumn<double?> latitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
       'latitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _longitudeMeta = const VerificationMeta('longitude');
-  late final GeneratedColumn<double?> longitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
       'longitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _altitudeMeta = const VerificationMeta('altitude');
-  late final GeneratedColumn<double?> altitude = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> altitude = GeneratedColumn<double>(
       'altitude', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _authorMeta = const VerificationMeta('author');
-  late final GeneratedColumn<String?> author = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> author = GeneratedColumn<String>(
       'author', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _sourceUrlMeta = const VerificationMeta('sourceUrl');
-  late final GeneratedColumn<String?> sourceUrl = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> sourceUrl = GeneratedColumn<String>(
       'source_url', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _isTodoMeta = const VerificationMeta('isTodo');
-  late final GeneratedColumn<int?> isTodo = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isTodo = GeneratedColumn<int>(
       'is_todo', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _todoDueMeta = const VerificationMeta('todoDue');
-  late final GeneratedColumn<int?> todoDue = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> todoDue = GeneratedColumn<int>(
       'todo_due', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _todoCompletedMeta =
       const VerificationMeta('todoCompleted');
-  late final GeneratedColumn<int?> todoCompleted = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> todoCompleted = GeneratedColumn<int>(
       'todo_completed', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _sourceMeta = const VerificationMeta('source');
-  late final GeneratedColumn<String?> source = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
       'source', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _sourceApplicationMeta =
       const VerificationMeta('sourceApplication');
-  late final GeneratedColumn<String?> sourceApplication =
-      GeneratedColumn<String?>('source_application', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> sourceApplication =
+      GeneratedColumn<String>('source_application', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _applicationDataMeta =
       const VerificationMeta('applicationData');
-  late final GeneratedColumn<String?> applicationData =
-      GeneratedColumn<String?>('application_data', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: false,
-          $customConstraints: 'NOT NULL DEFAULT \'\'',
-          defaultValue: const CustomExpression<String>('\'\''));
+  late final GeneratedColumn<String> applicationData = GeneratedColumn<String>(
+      'application_data', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT \'\'',
+      defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _orderMeta = const VerificationMeta('order');
-  late final GeneratedColumn<double?> order = GeneratedColumn<double?>(
+  late final GeneratedColumn<double> order = GeneratedColumn<double>(
       'order', aliasedName, false,
-      type: const RealType(),
+      type: DriftSqlType.double,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<double>('0'));
   final VerificationMeta _userCreatedTimeMeta =
       const VerificationMeta('userCreatedTime');
-  late final GeneratedColumn<int?> userCreatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userCreatedTime = GeneratedColumn<int>(
       'user_created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _userUpdatedTimeMeta =
       const VerificationMeta('userUpdatedTime');
-  late final GeneratedColumn<int?> userUpdatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> userUpdatedTime = GeneratedColumn<int>(
       'user_updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _encryptionCipherTextMeta =
       const VerificationMeta('encryptionCipherText');
-  late final GeneratedColumn<String?> encryptionCipherText =
-      GeneratedColumn<String?>('encryption_cipher_text', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> encryptionCipherText =
+      GeneratedColumn<String>('encryption_cipher_text', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _encryptionAppliedMeta =
       const VerificationMeta('encryptionApplied');
-  late final GeneratedColumn<int?> encryptionApplied = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionApplied = GeneratedColumn<int>(
       'encryption_applied', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _markupLanguageMeta =
       const VerificationMeta('markupLanguage');
-  late final GeneratedColumn<int?> markupLanguage = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> markupLanguage = GeneratedColumn<int>(
       'markup_language', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 1',
       defaultValue: const CustomExpression<int>('1'));
   final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
-  late final GeneratedColumn<int?> isShared = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> isShared = GeneratedColumn<int>(
       'is_shared', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
   final VerificationMeta _shareIdMeta = const VerificationMeta('shareId');
-  late final GeneratedColumn<String?> shareId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> shareId = GeneratedColumn<String>(
       'share_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _conflictOriginalIdMeta =
       const VerificationMeta('conflictOriginalId');
-  late final GeneratedColumn<String?> conflictOriginalId =
-      GeneratedColumn<String?>('conflict_original_id', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> conflictOriginalId =
+      GeneratedColumn<String>('conflict_original_id', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT \'\'',
           defaultValue: const CustomExpression<String>('\'\''));
   final VerificationMeta _masterKeyIdMeta =
       const VerificationMeta('masterKeyId');
-  late final GeneratedColumn<String?> masterKeyId = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> masterKeyId = GeneratedColumn<String>(
       'master_key_id', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT \'\'',
       defaultValue: const CustomExpression<String>('\'\''));
@@ -7712,8 +7595,66 @@ class Notes extends Table with TableInfo<Notes, Note> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Note map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Note.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Note(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      parentId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}parent_id'])!,
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      body: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      isConflict: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_conflict'])!,
+      latitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude'])!,
+      longitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude'])!,
+      altitude: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}altitude'])!,
+      author: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}author'])!,
+      sourceUrl: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}source_url'])!,
+      isTodo: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_todo'])!,
+      todoDue: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}todo_due'])!,
+      todoCompleted: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}todo_completed'])!,
+      source: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}source'])!,
+      sourceApplication: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}source_application'])!,
+      applicationData: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}application_data'])!,
+      order: attachedDatabase.options.types
+          .read(DriftSqlType.double, data['${effectivePrefix}order'])!,
+      userCreatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_created_time'])!,
+      userUpdatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}user_updated_time'])!,
+      encryptionCipherText: attachedDatabase.options.types.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}encryption_cipher_text'])!,
+      encryptionApplied: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}encryption_applied'])!,
+      markupLanguage: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}markup_language'])!,
+      isShared: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}is_shared'])!,
+      shareId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}share_id'])!,
+      conflictOriginalId: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}conflict_original_id'])!,
+      masterKeyId: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}master_key_id'])!,
+    );
   }
 
   @override
@@ -7731,27 +7672,12 @@ class TableField extends DataClass implements Insertable<TableField> {
   final String fieldName;
   final int fieldType;
   final String? fieldDefault;
-  TableField(
+  const TableField(
       {required this.id,
       required this.theTableName,
       required this.fieldName,
       required this.fieldType,
       this.fieldDefault});
-  factory TableField.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return TableField(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      theTableName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}the_table_name'])!,
-      fieldName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}field_name'])!,
-      fieldType: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}field_type'])!,
-      fieldDefault: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}field_default']),
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -7760,7 +7686,7 @@ class TableField extends DataClass implements Insertable<TableField> {
     map['field_name'] = Variable<String>(fieldName);
     map['field_type'] = Variable<int>(fieldType);
     if (!nullToAbsent || fieldDefault != null) {
-      map['field_default'] = Variable<String?>(fieldDefault);
+      map['field_default'] = Variable<String>(fieldDefault);
     }
     return map;
   }
@@ -7805,13 +7731,14 @@ class TableField extends DataClass implements Insertable<TableField> {
           String? theTableName,
           String? fieldName,
           int? fieldType,
-          String? fieldDefault}) =>
+          Value<String?> fieldDefault = const Value.absent()}) =>
       TableField(
         id: id ?? this.id,
         theTableName: theTableName ?? this.theTableName,
         fieldName: fieldName ?? this.fieldName,
         fieldType: fieldType ?? this.fieldType,
-        fieldDefault: fieldDefault ?? this.fieldDefault,
+        fieldDefault:
+            fieldDefault.present ? fieldDefault.value : this.fieldDefault,
       );
   @override
   String toString() {
@@ -7866,7 +7793,7 @@ class TableFieldsCompanion extends UpdateCompanion<TableField> {
     Expression<String>? theTableName,
     Expression<String>? fieldName,
     Expression<int>? fieldType,
-    Expression<String?>? fieldDefault,
+    Expression<String>? fieldDefault,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -7908,7 +7835,7 @@ class TableFieldsCompanion extends UpdateCompanion<TableField> {
       map['field_type'] = Variable<int>(fieldType.value);
     }
     if (fieldDefault.present) {
-      map['field_default'] = Variable<String?>(fieldDefault.value);
+      map['field_default'] = Variable<String>(fieldDefault.value);
     }
     return map;
   }
@@ -7932,35 +7859,35 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
   final String? _alias;
   TableFields(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _theTableNameMeta =
       const VerificationMeta('theTableName');
-  late final GeneratedColumn<String?> theTableName = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> theTableName = GeneratedColumn<String>(
       'the_table_name', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _fieldNameMeta = const VerificationMeta('fieldName');
-  late final GeneratedColumn<String?> fieldName = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> fieldName = GeneratedColumn<String>(
       'field_name', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _fieldTypeMeta = const VerificationMeta('fieldType');
-  late final GeneratedColumn<int?> fieldType = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> fieldType = GeneratedColumn<int>(
       'field_type', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _fieldDefaultMeta =
       const VerificationMeta('fieldDefault');
-  late final GeneratedColumn<String?> fieldDefault = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> fieldDefault = GeneratedColumn<String>(
       'field_default', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: '');
   @override
@@ -8011,8 +7938,19 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   TableField map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return TableField.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TableField(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      theTableName: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}the_table_name'])!,
+      fieldName: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}field_name'])!,
+      fieldType: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}field_type'])!,
+      fieldDefault: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}field_default']),
+    );
   }
 
   @override
@@ -8027,16 +7965,7 @@ class TableFields extends Table with TableInfo<TableFields, TableField> {
 class VersionData extends DataClass implements Insertable<VersionData> {
   final int version;
   final int tableFieldsVersion;
-  VersionData({required this.version, required this.tableFieldsVersion});
-  factory VersionData.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return VersionData(
-      version: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}version'])!,
-      tableFieldsVersion: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}table_fields_version'])!,
-    );
-  }
+  const VersionData({required this.version, required this.tableFieldsVersion});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -8151,16 +8080,16 @@ class Version extends Table with TableInfo<Version, VersionData> {
   final String? _alias;
   Version(this.attachedDatabase, [this._alias]);
   final VerificationMeta _versionMeta = const VerificationMeta('version');
-  late final GeneratedColumn<int?> version = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> version = GeneratedColumn<int>(
       'version', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _tableFieldsVersionMeta =
       const VerificationMeta('tableFieldsVersion');
-  late final GeneratedColumn<int?> tableFieldsVersion = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> tableFieldsVersion = GeneratedColumn<int>(
       'table_fields_version', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT 0',
       defaultValue: const CustomExpression<int>('0'));
@@ -8194,8 +8123,13 @@ class Version extends Table with TableInfo<Version, VersionData> {
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   VersionData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return VersionData.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return VersionData(
+      version: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}version'])!,
+      tableFieldsVersion: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}table_fields_version'])!,
+    );
   }
 
   @override
@@ -8210,24 +8144,15 @@ class Version extends Table with TableInfo<Version, VersionData> {
 class Setting extends DataClass implements Insertable<Setting> {
   final String? key;
   final String? value;
-  Setting({this.key, this.value});
-  factory Setting.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Setting(
-      key: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}key']),
-      value: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}value']),
-    );
-  }
+  const Setting({this.key, this.value});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || key != null) {
-      map['key'] = Variable<String?>(key);
+      map['key'] = Variable<String>(key);
     }
     if (!nullToAbsent || value != null) {
-      map['value'] = Variable<String?>(value);
+      map['value'] = Variable<String>(value);
     }
     return map;
   }
@@ -8257,9 +8182,12 @@ class Setting extends DataClass implements Insertable<Setting> {
     };
   }
 
-  Setting copyWith({String? key, String? value}) => Setting(
-        key: key ?? this.key,
-        value: value ?? this.value,
+  Setting copyWith(
+          {Value<String?> key = const Value.absent(),
+          Value<String?> value = const Value.absent()}) =>
+      Setting(
+        key: key.present ? key.value : this.key,
+        value: value.present ? value.value : this.value,
       );
   @override
   String toString() {
@@ -8290,8 +8218,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     this.value = const Value.absent(),
   });
   static Insertable<Setting> custom({
-    Expression<String?>? key,
-    Expression<String?>? value,
+    Expression<String>? key,
+    Expression<String>? value,
   }) {
     return RawValuesInsertable({
       if (key != null) 'key': key,
@@ -8310,10 +8238,10 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (key.present) {
-      map['key'] = Variable<String?>(key.value);
+      map['key'] = Variable<String>(key.value);
     }
     if (value.present) {
-      map['value'] = Variable<String?>(value.value);
+      map['value'] = Variable<String>(value.value);
     }
     return map;
   }
@@ -8334,15 +8262,15 @@ class Settings extends Table with TableInfo<Settings, Setting> {
   final String? _alias;
   Settings(this.attachedDatabase, [this._alias]);
   final VerificationMeta _keyMeta = const VerificationMeta('key');
-  late final GeneratedColumn<String?> key = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
       'key', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _valueMeta = const VerificationMeta('value');
-  late final GeneratedColumn<String?> value = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
       'value', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: '');
   @override
@@ -8371,8 +8299,13 @@ class Settings extends Table with TableInfo<Settings, Setting> {
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
   Setting map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Setting.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Setting(
+      key: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}key']),
+      value: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}value']),
+    );
   }
 
   @override
@@ -8392,7 +8325,7 @@ class MasterKey extends DataClass implements Insertable<MasterKey> {
   final int encryptionMethod;
   final String checksum;
   final String content;
-  MasterKey(
+  const MasterKey(
       {this.id,
       required this.createdTime,
       required this.updatedTime,
@@ -8400,30 +8333,11 @@ class MasterKey extends DataClass implements Insertable<MasterKey> {
       required this.encryptionMethod,
       required this.checksum,
       required this.content});
-  factory MasterKey.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return MasterKey(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      sourceApplication: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}source_application'])!,
-      encryptionMethod: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}encryption_method'])!,
-      checksum: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}checksum'])!,
-      content: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String?>(id);
+      map['id'] = Variable<String>(id);
     }
     map['created_time'] = Variable<int>(createdTime);
     map['updated_time'] = Variable<int>(updatedTime);
@@ -8475,7 +8389,7 @@ class MasterKey extends DataClass implements Insertable<MasterKey> {
   }
 
   MasterKey copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           int? createdTime,
           int? updatedTime,
           String? sourceApplication,
@@ -8483,7 +8397,7 @@ class MasterKey extends DataClass implements Insertable<MasterKey> {
           String? checksum,
           String? content}) =>
       MasterKey(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         createdTime: createdTime ?? this.createdTime,
         updatedTime: updatedTime ?? this.updatedTime,
         sourceApplication: sourceApplication ?? this.sourceApplication,
@@ -8553,7 +8467,7 @@ class MasterKeysCompanion extends UpdateCompanion<MasterKey> {
         checksum = Value(checksum),
         content = Value(content);
   static Insertable<MasterKey> custom({
-    Expression<String?>? id,
+    Expression<String>? id,
     Expression<int>? createdTime,
     Expression<int>? updatedTime,
     Expression<String>? sourceApplication,
@@ -8595,7 +8509,7 @@ class MasterKeysCompanion extends UpdateCompanion<MasterKey> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<String?>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (createdTime.present) {
       map['created_time'] = Variable<int>(createdTime.value);
@@ -8639,49 +8553,49 @@ class MasterKeys extends Table with TableInfo<MasterKeys, MasterKey> {
   final String? _alias;
   MasterKeys(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _sourceApplicationMeta =
       const VerificationMeta('sourceApplication');
-  late final GeneratedColumn<String?> sourceApplication =
-      GeneratedColumn<String?>('source_application', aliasedName, false,
-          type: const StringType(),
+  late final GeneratedColumn<String> sourceApplication =
+      GeneratedColumn<String>('source_application', aliasedName, false,
+          type: DriftSqlType.string,
           requiredDuringInsert: true,
           $customConstraints: 'NOT NULL');
   final VerificationMeta _encryptionMethodMeta =
       const VerificationMeta('encryptionMethod');
-  late final GeneratedColumn<int?> encryptionMethod = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> encryptionMethod = GeneratedColumn<int>(
       'encryption_method', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _checksumMeta = const VerificationMeta('checksum');
-  late final GeneratedColumn<String?> checksum = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> checksum = GeneratedColumn<String>(
       'checksum', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _contentMeta = const VerificationMeta('content');
-  late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
       'content', aliasedName, false,
-      type: const StringType(),
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -8757,8 +8671,23 @@ class MasterKeys extends Table with TableInfo<MasterKeys, MasterKey> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   MasterKey map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return MasterKey.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MasterKey(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      sourceApplication: attachedDatabase.options.types.read(
+          DriftSqlType.string, data['${effectivePrefix}source_application'])!,
+      encryptionMethod: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}encryption_method'])!,
+      checksum: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}checksum'])!,
+      content: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
+    );
   }
 
   @override
@@ -8775,24 +8704,11 @@ class Migration extends DataClass implements Insertable<Migration> {
   final int number;
   final int updatedTime;
   final int createdTime;
-  Migration(
+  const Migration(
       {required this.id,
       required this.number,
       required this.updatedTime,
       required this.createdTime});
-  factory Migration.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Migration(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      number: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}number'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -8946,29 +8862,29 @@ class Migrations extends Table with TableInfo<Migrations, Migration> {
   final String? _alias;
   Migrations(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'PRIMARY KEY');
   final VerificationMeta _numberMeta = const VerificationMeta('number');
-  late final GeneratedColumn<int?> number = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> number = GeneratedColumn<int>(
       'number', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _updatedTimeMeta =
       const VerificationMeta('updatedTime');
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   final VerificationMeta _createdTimeMeta =
       const VerificationMeta('createdTime');
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
   @override
@@ -9014,8 +8930,17 @@ class Migrations extends Table with TableInfo<Migrations, Migration> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Migration map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Migration.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Migration(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      number: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}number'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+    );
   }
 
   @override
@@ -9034,31 +8959,13 @@ class TagsWithNoteCountData extends DataClass {
   final int updatedTime;
   final int noteCount;
   final int todoCompletedCount;
-  TagsWithNoteCountData(
+  const TagsWithNoteCountData(
       {this.id,
       required this.title,
       required this.createdTime,
       required this.updatedTime,
       required this.noteCount,
       required this.todoCompletedCount});
-  factory TagsWithNoteCountData.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return TagsWithNoteCountData(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      createdTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_time'])!,
-      updatedTime: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_time'])!,
-      noteCount: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}note_count'])!,
-      todoCompletedCount: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}todo_completed_count'])!,
-    );
-  }
   factory TagsWithNoteCountData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -9085,14 +8992,14 @@ class TagsWithNoteCountData extends DataClass {
   }
 
   TagsWithNoteCountData copyWith(
-          {String? id,
+          {Value<String?> id = const Value.absent(),
           String? title,
           int? createdTime,
           int? updatedTime,
           int? noteCount,
           int? todoCompletedCount}) =>
       TagsWithNoteCountData(
-        id: id ?? this.id,
+        id: id.present ? id.value : this.id,
         title: title ?? this.title,
         createdTime: createdTime ?? this.createdTime,
         updatedTime: updatedTime ?? this.updatedTime,
@@ -9143,33 +9050,46 @@ class TagsWithNoteCount
   String get entityName => 'tags_with_note_count';
   @override
   String get createViewStmt =>
-      'CREATE VIEW tags_with_note_count AS\n    SELECT tags.id as id,\n        tags.title as title,\n        tags.created_time as created_time,\n        tags.updated_time as updated_time,\n        COUNT(notes.id) as note_count,\n        SUM(CASE WHEN notes.todo_completed > 0 THEN 1 ELSE 0 END) AS todo_completed_count\n    FROM tags\n    LEFT JOIN note_tags nt on nt.tag_id = tags.id\n    LEFT JOIN notes on notes.id = nt.note_id\n    WHERE notes.id IS NOT NULL\n    GROUP BY tags.id\n--/* tags_with_note_count(id,title,created_time,updated_time,note_count,todo_completed_count) */\n;';
+      'CREATE VIEW tags_with_note_count AS SELECT tags.id AS id, tags.title AS title, tags.created_time AS created_time, tags.updated_time AS updated_time, COUNT(notes.id) AS note_count, SUM(CASE WHEN notes.todo_completed > 0 THEN 1 ELSE 0 END) AS todo_completed_count FROM tags LEFT JOIN note_tags AS nt ON nt.tag_id = tags.id LEFT JOIN notes ON notes.id = nt.note_id WHERE notes.id IS NOT NULL GROUP BY tags.id';
   @override
   TagsWithNoteCount get asDslTable => this;
   @override
   TagsWithNoteCountData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return TagsWithNoteCountData.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TagsWithNoteCountData(
+      id: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      title: attachedDatabase.options.types
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      createdTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}created_time'])!,
+      updatedTime: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}updated_time'])!,
+      noteCount: attachedDatabase.options.types
+          .read(DriftSqlType.int, data['${effectivePrefix}note_count'])!,
+      todoCompletedCount: attachedDatabase.options.types.read(
+          DriftSqlType.int, data['${effectivePrefix}todo_completed_count'])!,
+    );
   }
 
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, true,
-      type: const StringType());
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
-      type: const StringType());
-  late final GeneratedColumn<int?> createdTime = GeneratedColumn<int?>(
+      type: DriftSqlType.string);
+  late final GeneratedColumn<int> createdTime = GeneratedColumn<int>(
       'created_time', aliasedName, false,
-      type: const IntType());
-  late final GeneratedColumn<int?> updatedTime = GeneratedColumn<int?>(
+      type: DriftSqlType.int);
+  late final GeneratedColumn<int> updatedTime = GeneratedColumn<int>(
       'updated_time', aliasedName, false,
-      type: const IntType());
-  late final GeneratedColumn<int?> noteCount = GeneratedColumn<int?>(
+      type: DriftSqlType.int);
+  late final GeneratedColumn<int> noteCount = GeneratedColumn<int>(
       'note_count', aliasedName, false,
-      type: const IntType());
-  late final GeneratedColumn<int?> todoCompletedCount = GeneratedColumn<int?>(
+      type: DriftSqlType.int);
+  late final GeneratedColumn<int> todoCompletedCount = GeneratedColumn<int>(
       'todo_completed_count', aliasedName, false,
-      type: const IntType());
+      type: DriftSqlType.int);
   @override
   TagsWithNoteCount createAlias(String alias) {
     return TagsWithNoteCount(attachedDatabase, alias);
@@ -9182,141 +9102,141 @@ class TagsWithNoteCount
 }
 
 abstract class _$JoplinDatabase extends GeneratedDatabase {
-  _$JoplinDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$JoplinDatabase(QueryExecutor e) : super(e);
   late final Folders folders = Folders(this);
   late final Index foldersTitle =
-      Index('folders_title', 'CREATE INDEX folders_title ON folders (title);');
+      Index('folders_title', 'CREATE INDEX folders_title ON folders (title)');
   late final Index foldersUpdatedTime = Index('folders_updated_time',
-      'CREATE INDEX folders_updated_time ON folders (updated_time);');
+      'CREATE INDEX folders_updated_time ON folders (updated_time)');
   late final Tags tags = Tags(this);
   late final Index tagsTitle =
-      Index('tags_title', 'CREATE INDEX tags_title ON tags (title);');
+      Index('tags_title', 'CREATE INDEX tags_title ON tags (title)');
   late final Index tagsUpdatedTime = Index('tags_updated_time',
-      'CREATE INDEX tags_updated_time ON tags (updated_time);');
+      'CREATE INDEX tags_updated_time ON tags (updated_time)');
   late final NoteTags noteTags = NoteTags(this);
   late final Index noteTagsNoteId = Index('note_tags_note_id',
-      'CREATE INDEX note_tags_note_id ON note_tags (note_id);');
+      'CREATE INDEX note_tags_note_id ON note_tags (note_id)');
   late final Index noteTagsTagId = Index('note_tags_tag_id',
-      'CREATE INDEX note_tags_tag_id ON note_tags (tag_id);');
+      'CREATE INDEX note_tags_tag_id ON note_tags (tag_id)');
   late final Index noteTagsUpdatedTime = Index('note_tags_updated_time',
-      'CREATE INDEX note_tags_updated_time ON note_tags (updated_time);');
+      'CREATE INDEX note_tags_updated_time ON note_tags (updated_time)');
   late final SyncItems syncItems = SyncItems(this);
   late final Index syncItemsSyncTime = Index('sync_items_sync_time',
-      'CREATE INDEX sync_items_sync_time ON sync_items (sync_time);');
+      'CREATE INDEX sync_items_sync_time ON sync_items (sync_time)');
   late final Index syncItemsSyncTarget = Index('sync_items_sync_target',
-      'CREATE INDEX sync_items_sync_target ON sync_items (sync_target);');
+      'CREATE INDEX sync_items_sync_target ON sync_items (sync_target)');
   late final Index syncItemsItemType = Index('sync_items_item_type',
-      'CREATE INDEX sync_items_item_type ON sync_items (item_type);');
+      'CREATE INDEX sync_items_item_type ON sync_items (item_type)');
   late final Index syncItemsItemId = Index('sync_items_item_id',
-      'CREATE INDEX sync_items_item_id ON sync_items (item_id);');
+      'CREATE INDEX sync_items_item_id ON sync_items (item_id)');
   late final DeletedItems deletedItems = DeletedItems(this);
   late final Index deletedItemsSyncTarget = Index('deleted_items_sync_target',
-      'CREATE INDEX deleted_items_sync_target ON deleted_items (sync_target);');
+      'CREATE INDEX deleted_items_sync_target ON deleted_items (sync_target)');
   late final Index foldersUserUpdatedTime = Index('folders_user_updated_time',
-      'CREATE INDEX folders_user_updated_time ON folders (user_updated_time);');
+      'CREATE INDEX folders_user_updated_time ON folders (user_updated_time)');
   late final Index tagsUserUpdatedTime = Index('tags_user_updated_time',
-      'CREATE INDEX tags_user_updated_time ON tags (user_updated_time);');
+      'CREATE INDEX tags_user_updated_time ON tags (user_updated_time)');
   late final Index noteTagsUserUpdatedTime = Index(
       'note_tags_user_updated_time',
-      'CREATE INDEX note_tags_user_updated_time ON note_tags (user_updated_time);');
+      'CREATE INDEX note_tags_user_updated_time ON note_tags (user_updated_time)');
   late final Alarms alarms = Alarms(this);
   late final Index alarmNoteId =
-      Index('alarm_note_id', 'CREATE INDEX alarm_note_id ON alarms (note_id);');
+      Index('alarm_note_id', 'CREATE INDEX alarm_note_id ON alarms (note_id)');
   late final Index foldersEncryptionApplied = Index(
       'folders_encryption_applied',
-      'CREATE INDEX folders_encryption_applied ON folders (encryption_applied);');
+      'CREATE INDEX folders_encryption_applied ON folders (encryption_applied)');
   late final Index tagsEncryptionApplied = Index('tags_encryption_applied',
-      'CREATE INDEX tags_encryption_applied ON tags (encryption_applied);');
+      'CREATE INDEX tags_encryption_applied ON tags (encryption_applied)');
   late final Index noteTagsEncryptionApplied = Index(
       'note_tags_encryption_applied',
-      'CREATE INDEX note_tags_encryption_applied ON note_tags (encryption_applied);');
+      'CREATE INDEX note_tags_encryption_applied ON note_tags (encryption_applied)');
   late final ItemChanges itemChanges = ItemChanges(this);
   late final Index itemChangesItemId = Index('item_changes_item_id',
-      'CREATE INDEX item_changes_item_id ON item_changes (item_id);');
+      'CREATE INDEX item_changes_item_id ON item_changes (item_id)');
   late final Index itemChangesCreatedTime = Index('item_changes_created_time',
-      'CREATE INDEX item_changes_created_time ON item_changes (created_time);');
+      'CREATE INDEX item_changes_created_time ON item_changes (created_time)');
   late final Index itemChangesItemType = Index('item_changes_item_type',
-      'CREATE INDEX item_changes_item_type ON item_changes (item_type);');
+      'CREATE INDEX item_changes_item_type ON item_changes (item_type)');
   late final NoteResources noteResources = NoteResources(this);
   late final Index noteResourcesNoteId = Index('note_resources_note_id',
-      'CREATE INDEX note_resources_note_id ON note_resources (note_id);');
+      'CREATE INDEX note_resources_note_id ON note_resources (note_id)');
   late final Index noteResourcesResourceId = Index('note_resources_resource_id',
-      'CREATE INDEX note_resources_resource_id ON note_resources (resource_id);');
+      'CREATE INDEX note_resources_resource_id ON note_resources (resource_id)');
   late final ResourceLocalStates resourceLocalStates =
       ResourceLocalStates(this);
   late final Index resourceLocalStatesResourceId = Index(
       'resource_local_states_resource_id',
-      'CREATE INDEX resource_local_states_resource_id ON resource_local_states (resource_id);');
+      'CREATE INDEX resource_local_states_resource_id ON resource_local_states (resource_id)');
   late final Index resourceLocalStatesResourceFetchStatus = Index(
       'resource_local_states_resource_fetch_status',
-      'CREATE INDEX resource_local_states_resource_fetch_status ON resource_local_states (fetch_status);');
+      'CREATE INDEX resource_local_states_resource_fetch_status ON resource_local_states (fetch_status)');
   late final Revisions revisions = Revisions(this);
   late final Index revisionsParentId = Index('revisions_parent_id',
-      'CREATE INDEX revisions_parent_id ON revisions (parent_id);');
+      'CREATE INDEX revisions_parent_id ON revisions (parent_id)');
   late final Index revisionsItemType = Index('revisions_item_type',
-      'CREATE INDEX revisions_item_type ON revisions (item_type);');
+      'CREATE INDEX revisions_item_type ON revisions (item_type)');
   late final Index revisionsItemId = Index('revisions_item_id',
-      'CREATE INDEX revisions_item_id ON revisions (item_id);');
+      'CREATE INDEX revisions_item_id ON revisions (item_id)');
   late final Index revisionsItemUpdatedTime = Index(
       'revisions_item_updated_time',
-      'CREATE INDEX revisions_item_updated_time ON revisions (item_updated_time);');
+      'CREATE INDEX revisions_item_updated_time ON revisions (item_updated_time)');
   late final Index revisionsUpdatedTime = Index('revisions_updated_time',
-      'CREATE INDEX revisions_updated_time ON revisions (updated_time);');
+      'CREATE INDEX revisions_updated_time ON revisions (updated_time)');
   late final ResourcesToDownload resourcesToDownload =
       ResourcesToDownload(this);
   late final Index resourcesToDownloadResourceId = Index(
       'resources_to_download_resource_id',
-      'CREATE INDEX resources_to_download_resource_id ON resources_to_download (resource_id);');
+      'CREATE INDEX resources_to_download_resource_id ON resources_to_download (resource_id)');
   late final Index resourcesToDownloadUpdatedTime = Index(
       'resources_to_download_updated_time',
-      'CREATE INDEX resources_to_download_updated_time ON resources_to_download (updated_time);');
+      'CREATE INDEX resources_to_download_updated_time ON resources_to_download (updated_time)');
   late final KeyValues keyValues = KeyValues(this);
   late final Index keyValuesKey = Index('key_values_key',
-      'CREATE UNIQUE INDEX key_values_key ON key_values ("key");');
+      'CREATE UNIQUE INDEX key_values_key ON key_values ("key")');
   late final Resources resources = Resources(this);
   late final Index resourcesSize = Index(
-      'resources_size', 'CREATE INDEX resources_size ON resources("size");');
+      'resources_size', 'CREATE INDEX resources_size ON resources (size)');
   late final NotesNormalized notesNormalized = NotesNormalized(this);
   late final Index notesNormalizedId = Index('notes_normalized_id',
-      'CREATE INDEX notes_normalized_id ON notes_normalized (id);');
+      'CREATE INDEX notes_normalized_id ON notes_normalized (id)');
   late final Index notesNormalizedUserCreatedTime = Index(
       'notes_normalized_user_created_time',
-      'CREATE INDEX notes_normalized_user_created_time ON notes_normalized (user_created_time);');
+      'CREATE INDEX notes_normalized_user_created_time ON notes_normalized (user_created_time)');
   late final Index notesNormalizedUserUpdatedTime = Index(
       'notes_normalized_user_updated_time',
-      'CREATE INDEX notes_normalized_user_updated_time ON notes_normalized (user_updated_time);');
+      'CREATE INDEX notes_normalized_user_updated_time ON notes_normalized (user_updated_time)');
   late final Index notesNormalizedIsTodo = Index('notes_normalized_is_todo',
-      'CREATE INDEX notes_normalized_is_todo ON notes_normalized (is_todo);');
+      'CREATE INDEX notes_normalized_is_todo ON notes_normalized (is_todo)');
   late final Index notesNormalizedTodoCompleted = Index(
       'notes_normalized_todo_completed',
-      'CREATE INDEX notes_normalized_todo_completed ON notes_normalized (todo_completed);');
+      'CREATE INDEX notes_normalized_todo_completed ON notes_normalized (todo_completed)');
   late final Index notesNormalizedParentId = Index('notes_normalized_parent_id',
-      'CREATE INDEX notes_normalized_parent_id ON notes_normalized (parent_id);');
+      'CREATE INDEX notes_normalized_parent_id ON notes_normalized (parent_id)');
   late final Index notesNormalizedLatitude = Index('notes_normalized_latitude',
-      'CREATE INDEX notes_normalized_latitude ON notes_normalized (latitude);');
+      'CREATE INDEX notes_normalized_latitude ON notes_normalized (latitude)');
   late final Index notesNormalizedLongitude = Index(
       'notes_normalized_longitude',
-      'CREATE INDEX notes_normalized_longitude ON notes_normalized (longitude);');
+      'CREATE INDEX notes_normalized_longitude ON notes_normalized (longitude)');
   late final Index notesNormalizedAltitude = Index('notes_normalized_altitude',
-      'CREATE INDEX notes_normalized_altitude ON notes_normalized (altitude);');
+      'CREATE INDEX notes_normalized_altitude ON notes_normalized (altitude)');
   late final Index notesNormalizedSourceUrl = Index(
       'notes_normalized_source_url',
-      'CREATE INDEX notes_normalized_source_url ON notes_normalized (source_url);');
+      'CREATE INDEX notes_normalized_source_url ON notes_normalized (source_url)');
   late final NotesFts notesFts = NotesFts(this);
   late final Trigger notesFtsBeforeUpdate = Trigger(
-      'CREATE TRIGGER notes_fts_before_update BEFORE UPDATE ON notes_normalized BEGIN\n    DELETE FROM notes_fts WHERE rowid=old.rowid;\nEND;',
+      'CREATE TRIGGER notes_fts_before_update BEFORE UPDATE ON notes_normalized BEGIN DELETE FROM notes_fts WHERE "rowid" = old."rowid";END',
       'notes_fts_before_update');
   late final Trigger notesFtsBeforeDelete = Trigger(
-      'CREATE TRIGGER notes_fts_before_delete BEFORE DELETE ON notes_normalized BEGIN\n    DELETE FROM notes_fts WHERE rowid=old.rowid;\nEND;',
+      'CREATE TRIGGER notes_fts_before_delete BEFORE DELETE ON notes_normalized BEGIN DELETE FROM notes_fts WHERE "rowid" = old."rowid";END',
       'notes_fts_before_delete');
   late final Trigger notesAfterUpdate = Trigger(
-      'CREATE TRIGGER notes_after_update AFTER UPDATE ON notes_normalized BEGIN\n    INSERT INTO notes_fts(\n        rowid,\n        id,\n        title,\n        body,\n        user_created_time,\n        user_updated_time,\n        is_todo,\n        todo_completed,\n        parent_id,\n        latitude,\n        longitude,\n        altitude,\n        source_url\n    )\n    SELECT\n        rowid,\n        id,\n        title,\n        body,\n        user_created_time,\n        user_updated_time,\n        is_todo,\n        todo_completed,\n        parent_id,\n        latitude,\n        longitude,\n        altitude,\n        source_url\n    FROM notes_normalized\n    WHERE new.rowid = notes_normalized.rowid;\nEND;',
+      'CREATE TRIGGER notes_after_update AFTER UPDATE ON notes_normalized BEGIN INSERT INTO notes_fts ("rowid", id, title, body, user_created_time, user_updated_time, is_todo, todo_completed, parent_id, latitude, longitude, altitude, source_url) SELECT "rowid", id, title, body, user_created_time, user_updated_time, is_todo, todo_completed, parent_id, latitude, longitude, altitude, source_url FROM notes_normalized WHERE new."rowid" = notes_normalized."rowid";END',
       'notes_after_update');
   late final Trigger notesAfterInsert = Trigger(
-      'CREATE TRIGGER notes_after_insert AFTER INSERT ON notes_normalized BEGIN\n    INSERT INTO notes_fts(\n        rowid,\n        id,\n        title,\n        body,\n        user_created_time,\n        user_updated_time,\n        is_todo,\n        todo_completed,\n        parent_id,\n        latitude,\n        longitude,\n        altitude,\n        source_url\n    )\n    SELECT\n        rowid,\n        id,\n        title,\n        body,\n        user_created_time,\n        user_updated_time,\n        is_todo,\n        todo_completed,\n        parent_id,\n        latitude,\n        longitude,\n        altitude,\n        source_url\n    FROM notes_normalized\n    WHERE new.rowid = notes_normalized.rowid;\nEND;',
+      'CREATE TRIGGER notes_after_insert AFTER INSERT ON notes_normalized BEGIN INSERT INTO notes_fts ("rowid", id, title, body, user_created_time, user_updated_time, is_todo, todo_completed, parent_id, latitude, longitude, altitude, source_url) SELECT "rowid", id, title, body, user_created_time, user_updated_time, is_todo, todo_completed, parent_id, latitude, longitude, altitude, source_url FROM notes_normalized WHERE new."rowid" = notes_normalized."rowid";END',
       'notes_after_insert');
   late final Index notesNormalizedTodoDue = Index('notes_normalized_todo_due',
-      'CREATE INDEX notes_normalized_todo_due ON notes_normalized (todo_due);');
+      'CREATE INDEX notes_normalized_todo_due ON notes_normalized (todo_due)');
   late final Notes notes = Notes(this);
   late final TagsWithNoteCount tagsWithNoteCount = TagsWithNoteCount(this);
   late final TableFields tableFields = TableFields(this);
@@ -9327,7 +9247,8 @@ abstract class _$JoplinDatabase extends GeneratedDatabase {
   late final FolderDao folderDao = FolderDao(this as JoplinDatabase);
   late final NoteDao noteDao = NoteDao(this as JoplinDatabase);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, dynamic>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         folders,

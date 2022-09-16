@@ -34,11 +34,14 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
   Selectable<Note> allNotes() {
     return customSelect('SELECT * FROM notes', variables: [], readsFrom: {
       notes,
-    }).map(notes.mapFromRow);
+    }).asyncMap(notes.mapFromRow);
   }
 
   Future<int> insertNote(Insertable<Note> note) {
-    final generatednote = $writeInsertable(this.notes, note);
+    var $arrayStartIndex = 1;
+    final generatednote =
+        $writeInsertable(this.notes, note, startIndex: $arrayStartIndex);
+    $arrayStartIndex += generatednote.amountOfVariables;
     return customInsert(
       'INSERT INTO notes ${generatednote.sql}',
       variables: [...generatednote.introducedVariables],
@@ -48,8 +51,8 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
 
   Future<int> deleteNote(String? id) {
     return customUpdate(
-      'DELETE FROM notes WHERE id = :id',
-      variables: [Variable<String?>(id)],
+      'DELETE FROM notes WHERE id = ?1',
+      variables: [Variable<String>(id)],
       updates: {notes},
       updateKind: UpdateKind.delete,
     );

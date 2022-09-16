@@ -14,7 +14,7 @@ class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
   }
 
   Future<int> addNote(Note note) {
-    return insertNote(note.copyWith(id: UuidUtils.id()));
+    return insertNote(note.copyWith(id: Value(UuidUtils.id())));
   }
 
   Future<int> removeNote(String id) {

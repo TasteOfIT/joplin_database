@@ -34,11 +34,14 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
   Selectable<Folder> allFolders() {
     return customSelect('SELECT * FROM folders', variables: [], readsFrom: {
       folders,
-    }).map(folders.mapFromRow);
+    }).asyncMap(folders.mapFromRow);
   }
 
   Future<int> insertFolder(Insertable<Folder> folder) {
-    final generatedfolder = $writeInsertable(this.folders, folder);
+    var $arrayStartIndex = 1;
+    final generatedfolder =
+        $writeInsertable(this.folders, folder, startIndex: $arrayStartIndex);
+    $arrayStartIndex += generatedfolder.amountOfVariables;
     return customInsert(
       'INSERT INTO folders ${generatedfolder.sql}',
       variables: [...generatedfolder.introducedVariables],
@@ -48,8 +51,8 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
 
   Future<int> deleteFolder(String? id) {
     return customUpdate(
-      'DELETE FROM folders WHERE id = :id',
-      variables: [Variable<String?>(id)],
+      'DELETE FROM folders WHERE id = ?1',
+      variables: [Variable<String>(id)],
       updates: {folders},
       updateKind: UpdateKind.delete,
     );
