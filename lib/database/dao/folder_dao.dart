@@ -17,6 +17,10 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
     return insertFolder(folder.copyWith(id: Value(UuidUtils.id())));
   }
 
+  Future<int> editFolder(String id, String title, int updatedTime) {
+    return updateFolder(title, updatedTime, updatedTime, id);
+  }
+
   Future<int> removeFolder(String id) {
     return deleteFolder(id);
   }
