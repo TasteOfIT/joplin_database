@@ -37,6 +37,24 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
     }).asyncMap(folders.mapFromRow);
   }
 
+  Selectable<Folder> queryFolder(String? id) {
+    return customSelect('SELECT * FROM folders WHERE id = ?1', variables: [
+      Variable<String>(id)
+    ], readsFrom: {
+      folders,
+    }).asyncMap(folders.mapFromRow);
+  }
+
+  Selectable<Folder> queryFolders(String parentId) {
+    return customSelect('SELECT * FROM folders WHERE parent_id = ?1',
+        variables: [
+          Variable<String>(parentId)
+        ],
+        readsFrom: {
+          folders,
+        }).asyncMap(folders.mapFromRow);
+  }
+
   Future<int> insertFolder(Insertable<Folder> folder) {
     var $arrayStartIndex = 1;
     final generatedfolder =

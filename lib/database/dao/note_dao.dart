@@ -21,6 +21,14 @@ class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
     );
   }
 
+  Future<Note?> getNote(String id) {
+    return queryNote(id).getSingleOrNull();
+  }
+
+  Future<List<Note>> notesIn(String parentId) {
+    return queryNotes(parentId).get();
+  }
+
   Future<int> editTitle(String id, String title, int updatedTime) {
     return renameNote(title, updatedTime, updatedTime, id);
   }

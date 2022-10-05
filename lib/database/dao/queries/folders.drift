@@ -1,6 +1,8 @@
 import '../../tables/tables.drift';
 
 allFolders: SELECT * FROM folders;
+queryFolder: SELECT * FROM folders WHERE id = :id;
+queryFolders: SELECT * FROM folders WHERE parent_id = :parent_id;
 insertFolder: INSERT INTO folders $folder;
 updateFolder: UPDATE folders
     SET title = :title, updated_time = :updated_time, user_updated_time = :user_updated_time

@@ -13,8 +13,20 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
     return allFolders().watch();
   }
 
-  Future<int> addFolder(Folder folder) {
-    return insertFolder(folder.copyWith(id: Value(UuidUtils.id())));
+  Future<Folder?> getFolder(String id) {
+    return queryFolder(id).getSingleOrNull();
+  }
+
+  Future<List<Folder>> foldersIn(String parentId) {
+    return queryFolders(parentId).get();
+  }
+
+  Future<String> addFolder(Folder folder) {
+    String id = UuidUtils.id();
+    return insertFolder(folder.copyWith(id: Value(id))).then(
+      (value) => Future.value(id),
+      onError: (_) => Future.value(''),
+    );
   }
 
   Future<int> editFolder(String id, String title, int updatedTime) {

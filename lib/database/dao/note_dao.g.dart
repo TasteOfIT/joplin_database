@@ -37,6 +37,22 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
     }).asyncMap(notes.mapFromRow);
   }
 
+  Selectable<Note> queryNote(String? id) {
+    return customSelect('SELECT * FROM notes WHERE id = ?1', variables: [
+      Variable<String>(id)
+    ], readsFrom: {
+      notes,
+    }).asyncMap(notes.mapFromRow);
+  }
+
+  Selectable<Note> queryNotes(String parentId) {
+    return customSelect('SELECT * FROM notes WHERE parent_id = ?1', variables: [
+      Variable<String>(parentId)
+    ], readsFrom: {
+      notes,
+    }).asyncMap(notes.mapFromRow);
+  }
+
   Future<int> insertNote(Insertable<Note> note) {
     var $arrayStartIndex = 1;
     final generatednote =
