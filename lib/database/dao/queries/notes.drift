@@ -2,4 +2,13 @@ import '../../tables/tables.drift';
 
 allNotes: SELECT * FROM notes;
 insertNote: INSERT INTO notes $note;
+renameNote: UPDATE notes
+    SET title = :title, updated_time = :updated_time, user_updated_time = :user_updated_time
+    WHERE id = :id;
+updateContent: UPDATE notes
+    SET body = :body, updated_time = :updated_time, user_updated_time = :user_updated_time
+    WHERE id = :id;
+moveNote: UPDATE notes
+    SET parent_id = :parent_id, updated_time = :updated_time, user_updated_time = :user_updated_time
+    WHERE id = :id;
 deleteNote: DELETE FROM notes WHERE id = :id;

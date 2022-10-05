@@ -64,6 +64,21 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
     );
   }
 
+  Future<int> moveFolder(
+      String parentId, int updatedTime, int userUpdatedTime, String? id) {
+    return customUpdate(
+      'UPDATE folders SET parent_id = ?1, updated_time = ?2, user_updated_time = ?3 WHERE id = ?4',
+      variables: [
+        Variable<String>(parentId),
+        Variable<int>(updatedTime),
+        Variable<int>(userUpdatedTime),
+        Variable<String>(id)
+      ],
+      updates: {folders},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   Future<int> deleteFolder(String? id) {
     return customUpdate(
       'DELETE FROM folders WHERE id = ?1',

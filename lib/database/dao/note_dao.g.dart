@@ -49,6 +49,51 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
     );
   }
 
+  Future<int> renameNote(
+      String title, int updatedTime, int userUpdatedTime, String? id) {
+    return customUpdate(
+      'UPDATE notes SET title = ?1, updated_time = ?2, user_updated_time = ?3 WHERE id = ?4',
+      variables: [
+        Variable<String>(title),
+        Variable<int>(updatedTime),
+        Variable<int>(userUpdatedTime),
+        Variable<String>(id)
+      ],
+      updates: {notes},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> updateContent(
+      String body, int updatedTime, int userUpdatedTime, String? id) {
+    return customUpdate(
+      'UPDATE notes SET body = ?1, updated_time = ?2, user_updated_time = ?3 WHERE id = ?4',
+      variables: [
+        Variable<String>(body),
+        Variable<int>(updatedTime),
+        Variable<int>(userUpdatedTime),
+        Variable<String>(id)
+      ],
+      updates: {notes},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> moveNote(
+      String parentId, int updatedTime, int userUpdatedTime, String? id) {
+    return customUpdate(
+      'UPDATE notes SET parent_id = ?1, updated_time = ?2, user_updated_time = ?3 WHERE id = ?4',
+      variables: [
+        Variable<String>(parentId),
+        Variable<int>(updatedTime),
+        Variable<int>(userUpdatedTime),
+        Variable<String>(id)
+      ],
+      updates: {notes},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   Future<int> deleteNote(String? id) {
     return customUpdate(
       'DELETE FROM notes WHERE id = ?1',
