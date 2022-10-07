@@ -13,20 +13,20 @@ class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
     return allNotes().watch();
   }
 
+  Future<Note?> getNote(String id) {
+    return queryNote(id).getSingleOrNull();
+  }
+
+  Stream<List<Note>> notesIn(String parentId) {
+    return queryNotes(parentId).watch();
+  }
+
   Future<String> addNote(Note note) {
     String id = UuidUtils.id();
     return insertNote(note.copyWith(id: Value(id))).then(
       (value) => Future.value(id),
       onError: (_) => Future.value(''),
     );
-  }
-
-  Future<Note?> getNote(String id) {
-    return queryNote(id).getSingleOrNull();
-  }
-
-  Future<List<Note>> notesIn(String parentId) {
-    return queryNotes(parentId).get();
   }
 
   Future<int> editTitle(String id, String title, int updatedTime) {

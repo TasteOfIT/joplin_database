@@ -17,8 +17,8 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
     return queryFolder(id).getSingleOrNull();
   }
 
-  Future<List<Folder>> foldersIn(String parentId) {
-    return queryFolders(parentId).get();
+  Stream<List<Folder>> foldersIn(String parentId) {
+    return queryFolders(parentId).watch();
   }
 
   Future<String> addFolder(Folder folder) {
