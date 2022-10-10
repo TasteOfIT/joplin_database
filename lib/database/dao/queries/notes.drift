@@ -14,3 +14,6 @@ moveNote: UPDATE notes
     SET parent_id = :parent_id, updated_time = :updated_time, user_updated_time = :user_updated_time
     WHERE id = :id;
 deleteNote: DELETE FROM notes WHERE id = :id;
+deleteNotes: DELETE FROM notes WHERE parent_id = :parent_id;
+cleanOrphans: DELETE FROM notes
+    WHERE LENGTH(parent_id) > 0 AND parent_id NOT IN (SELECT id FROM folders);

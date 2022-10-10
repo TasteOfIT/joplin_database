@@ -118,4 +118,22 @@ mixin _$NoteDaoMixin on DatabaseAccessor<JoplinDatabase> {
       updateKind: UpdateKind.delete,
     );
   }
+
+  Future<int> deleteNotes(String parentId) {
+    return customUpdate(
+      'DELETE FROM notes WHERE parent_id = ?1',
+      variables: [Variable<String>(parentId)],
+      updates: {notes},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> cleanOrphans() {
+    return customUpdate(
+      'DELETE FROM notes WHERE LENGTH(parent_id) > 0 AND parent_id NOT IN (SELECT id FROM folders)',
+      variables: [],
+      updates: {notes},
+      updateKind: UpdateKind.delete,
+    );
+  }
 }

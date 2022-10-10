@@ -42,7 +42,7 @@ class JoplinDatabase extends _$JoplinDatabase {
       },
       beforeOpen: (details) async {
         if (details.wasCreated) {
-          into(Version(attachedDatabase)).insert(VersionData(version: _initialVersion, tableFieldsVersion: 0));
+          into(Version(attachedDatabase)).insert(const VersionData(version: _initialVersion, tableFieldsVersion: 0));
         }
         await customStatement('PRAGMA foreign_keys = ON');
       },

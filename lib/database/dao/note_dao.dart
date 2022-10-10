@@ -44,4 +44,12 @@ class NoteDao extends DatabaseAccessor<JoplinDatabase> with _$NoteDaoMixin {
   Future<int> removeNote(String id) {
     return deleteNote(id);
   }
+
+  Future<int> removeNotes(String parentId) {
+    return deleteNotes(parentId);
+  }
+
+  Future<int> removeOrphans() {
+    return cleanOrphans();
+  }
 }

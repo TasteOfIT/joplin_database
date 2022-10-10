@@ -105,4 +105,22 @@ mixin _$FolderDaoMixin on DatabaseAccessor<JoplinDatabase> {
       updateKind: UpdateKind.delete,
     );
   }
+
+  Future<int> deleteFolders(String parentId) {
+    return customUpdate(
+      'DELETE FROM folders WHERE parent_id = ?1',
+      variables: [Variable<String>(parentId)],
+      updates: {folders},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> cleanOrphans() {
+    return customUpdate(
+      'DELETE FROM folders WHERE LENGTH(parent_id) > 0 AND parent_id NOT IN (SELECT id FROM folders)',
+      variables: [],
+      updates: {folders},
+      updateKind: UpdateKind.delete,
+    );
+  }
 }

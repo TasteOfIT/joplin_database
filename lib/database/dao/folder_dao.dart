@@ -40,4 +40,12 @@ class FolderDao extends DatabaseAccessor<JoplinDatabase> with _$FolderDaoMixin {
   Future<int> removeFolder(String id) {
     return deleteFolder(id);
   }
+
+  Future<int> removeFolders(String parentId) {
+    return deleteFolders(parentId);
+  }
+
+  Future<int> removeOrphans() {
+    return cleanOrphans();
+  }
 }
